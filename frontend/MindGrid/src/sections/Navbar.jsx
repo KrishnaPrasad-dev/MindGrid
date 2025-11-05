@@ -5,15 +5,18 @@ import menuuu from '../assets/menuham.png';
 import { navLinks } from '../constants/index.js';
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const NavItems = ({ onClick = () => {} }) => (
   <ul className="nav-ul font-bold">
     {navLinks.map((item) => (
       
       <li key={item.id} className="nav-li">
-        <a href={item.href} className="nav-li_a" onClick={onClick}>
+        <Link to='/hero'>
+        <span className="nav-li_a" onClick={onClick}>
           {item.name}
-        </a>
+        </span>
+        </Link>
         
       </li>
       

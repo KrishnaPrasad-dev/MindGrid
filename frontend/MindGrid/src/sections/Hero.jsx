@@ -6,6 +6,8 @@ import arrowblk from '../assets/next.png'
 import { Link, useNavigate } from "react-router-dom";
 import Explore from './Explore.jsx';
 import { useEffect, useState } from 'react';
+import GlowingCard from '../constants/GlowingCard.jsx';
+import clubpic from '../assets/clubimg.jpg'
 
 const Hero = () => {
 
@@ -70,8 +72,15 @@ const Hero = () => {
   <img className="h-5 w-5 ml-2" src={arrowblk} alt="arr" />
 </span>
   </Link>
-  
-</div>  
+
+
+</div>
+    
+  <GlowingCard 
+  className="relative "
+  title="MindGrid Club" 
+  description="This picture of mindgrid club members." 
+/>
     </section>
   );
 };
