@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Example from '../constants/EncryptButton';
 import {ToastContainer} from 'react-toastify'
 import { useState } from 'react';
+import { handleError, handleSuccess } from './Utils';
 
 const Signup = () => {
 
@@ -14,6 +15,8 @@ const Signup = () => {
       role: ''
   })
 
+  const navigate = useNavigate();
+
   const handleChange = (e)=>{
     const {name,value} =e.target;
     console.log(name,value);
@@ -22,9 +25,38 @@ const Signup = () => {
     setSignupInfo(copySignUpInfo);
   }
 
-  const handleSignup = (e)=>{
+  const handleSignup = async (e)=>{
     e.preventDefault();
-    
+    const { name , email , password , rollnumber, role} = signupInfo;
+    if(!name || !email || !password || !rollnumber || !role){
+        return handleError('All Credentials are required');
+    }try{
+        const url = "http://localhost:8080/auth/signup";
+        const response = await fetch(url,{
+          method:"POST",
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(signupInfo)
+        });
+        const result = await response.json();
+        const {success, message, error } =result;
+        if(success){
+          handleSuccess(message);
+          setTimeout(()=>{
+            navigate('/login')
+          },1000)
+        }else if(error){
+          const details = error?.details[0].message;
+          handleError(details); 
+        }
+        else if (!success){
+          handleError(message);
+        }
+        console.log(result)
+    }catch(err){
+        handleError(err);
+    }   
   }
   
 
@@ -32,7 +64,6 @@ const Signup = () => {
   return (
 
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* BACKGROUND, covers viewport */}
       <div className="fixed inset-0 w-screen h-screen bg-slate-950 z-0">
         <div className="absolute bottom-0 left-[-20vw] top-[-10vh] h-[40vw] w-[40vw] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,0.15),rgba(255,255,255,0))]"></div>
         <div className="absolute bottom-0 right-[-20vw] top-[-10vh] h-[40vw] w-[40vw] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,0.15),rgba(255,255,255,0))]"></div>

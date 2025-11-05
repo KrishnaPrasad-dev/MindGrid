@@ -57,7 +57,7 @@ const EncryptButton = ({ buttonText }) => {
       whileTap={{ scale: 0.975 }}
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
-      className="group relative overflow-hidden rounded-lg bg-blue-600 font-mono font-medium uppercase text-white transition-colors hover:text-indigo-300"
+      className="group relative overflow-hidden rounded-lg bg-blue-600 font-bold font-medium uppercase text-white transition-colors hover:text-green-500"
     >
       <div className="relative z-10 flex items-center gap-2">
         <FiLock />
@@ -72,7 +72,7 @@ const EncryptButton = ({ buttonText }) => {
           duration: 1,
           ease: "linear",
         }}
-        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
+        className="duration-400 absolute inset-0  z-0 scale-125 bg-gradient-to-t from-indigo-400/0 from-40% via-indigo-400/100 to-indigo-400/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
       />
     </motion.button>
   );

@@ -3,10 +3,15 @@ import { motion } from "framer-motion";
 import { calculateSizes } from '../constants/index.js';
 import brainImg from '../assets/brainrababu.gif';
 import arrowblk from '../assets/next.png'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Explore from './Explore.jsx';
+import { useEffect, useState } from 'react';
 
 const Hero = () => {
+
+  
+
+
   const isSmall = useMediaQuery({ maxWidth: 440 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });

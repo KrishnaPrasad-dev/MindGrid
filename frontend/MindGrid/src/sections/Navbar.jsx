@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect ,useState } from 'react';
 import brainImg from '../assets/brainrababu.gif';
 import cls from '../assets/closemenu.png';
 import menuuu from '../assets/menuham.png';
 import { navLinks } from '../constants/index.js';
 import React from 'react';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const NavItems = ({ onClick = () => {} }) => (
   <ul className="nav-ul font-bold">
@@ -14,12 +14,37 @@ const NavItems = ({ onClick = () => {} }) => (
         <a href={item.href} className="nav-li_a" onClick={onClick}>
           {item.name}
         </a>
+        
       </li>
+      
     ))}
   </ul>
+  
 );
 
 const Navbar = () => {
+
+
+  const [loggedInUser, setLoggedInUser]= useState('');
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    setLoggedInUser(localStorage.getItem('loggedInUser'))
+  }, [])
+
+  const handleLogout = (e)=>{
+    localStorage.removeItem('token')
+    localStorage.removeItem('loggedInUser');
+    
+    setTimeout(()=>{
+        navigate('/login');
+    },500)
+  }
+
+
+
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -44,6 +69,18 @@ const Navbar = () => {
 
           <nav className="sm:flex hidden">
             <NavItems />
+            <button
+            onClick={handleLogout}
+             className="relative inline-flex items-center justify-center px-5 ml-7 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group">
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute top-0 left-0 w-full bg-gradient-to-b from-white to-transparent opacity-5 h-1/3"></span>
+    <span className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-white to-transparent opacity-5"></span>
+    <span className="absolute bottom-0 left-0 w-4 h-full bg-gradient-to-r from-white to-transparent opacity-5"></span>
+    <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
+    <span className="relative">Logout</span>
+            </button>
           </nav>
         </div>
       </div>
@@ -51,6 +88,18 @@ const Navbar = () => {
       <div className={`nav-sidebar ${isOpen ? 'max-h-screen' : 'max-h-0'}`}>
         <nav className="p-5">
           <NavItems onClick={closeMenu} />
+          <button
+            onClick={handleLogout}
+             className="relative inline-flex items-center justify-center px-5 mt-2 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group">
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute top-0 left-0 w-full bg-gradient-to-b from-white to-transparent opacity-5 h-1/3"></span>
+    <span className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-white to-transparent opacity-5"></span>
+    <span className="absolute bottom-0 left-0 w-4 h-full bg-gradient-to-r from-white to-transparent opacity-5"></span>
+    <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
+    <span className="relative">Logout</span>
+            </button>
         </nav>
       </div>
     </header>

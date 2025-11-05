@@ -5,7 +5,7 @@ const signupValidation = (req,res,next)=>{
         name: Joi.string().min(4).max(100).required(),
         email: Joi.string().email().required(),
         password: Joi.string().min(4).max(100).required(),
-        rollnumber: Joi.string().min(10).max(11).required(),
+        rollnumber: Joi.string().min(5).max(15).required(),
         role: Joi.string().min(5).max(100).required(),
 
     });

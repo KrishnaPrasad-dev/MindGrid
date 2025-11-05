@@ -32,7 +32,6 @@ const Clubmembers = () => {
 
           <ul className="my-4 space-y-3">
             <li className="relative">
-              {/* Removed outer <a> - use div for content wrapper */}
               <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer">
                 <p className="ml-5">Krishna Prasad</p>
 
