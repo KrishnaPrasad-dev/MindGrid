@@ -1,8 +1,34 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Example from '../constants/EncryptButton';
-
+import {ToastContainer} from 'react-toastify'
+import { useState } from 'react';
 
 const Signup = () => {
+
+  const [signupInfo, setSignupInfo] = useState({
+      name: '',
+      email: '',
+      password: '',
+      rollnumber: '',
+      role: ''
+  })
+
+  const handleChange = (e)=>{
+    const {name,value} =e.target;
+    console.log(name,value);
+    const copySignUpInfo = { ...signupInfo };
+    copySignUpInfo[name]= value;
+    setSignupInfo(copySignUpInfo);
+  }
+
+  const handleSignup = (e)=>{
+    e.preventDefault();
+    
+  }
+  
+
+
   return (
 
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -22,55 +48,65 @@ const Signup = () => {
         
 
 
-        <form>
+        <form onSubmit={handleSignup}>
           <div className="space-y-6">
             <div>
               <label className="text-slate-300 text-sm font-medium mb-2 block">Name</label>
               <input
+                onChange={handleChange}
                 name="name"
                 type="text"
                 className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                 placeholder="Enter Your Name"
+                value={signupInfo.name}
               />
             </div>
 
             <div>
               <label className="text-slate-300 text-sm font-medium mb-2 block">Email Id</label>
               <input
+                onChange={handleChange}
                 name="email"
                 type="text"
                 className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                 placeholder="Enter email"
+                value={signupInfo.email}
               />
             </div>
 
             <div>
               <label className="text-slate-300 text-sm font-medium mb-2 block">Password</label>
               <input
+                onChange={handleChange}
                 name="password"
                 type="password"
                 className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                 placeholder="Enter password"
+                value={signupInfo.password}
               />
             </div>
 
             <div>
               <label className="text-slate-300 text-sm font-medium mb-2 block">Roll Number</label>
               <input
-                name="rollNumber"
+                onChange={handleChange}
+                name="rollnumber"
                 type="text"
                 className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                 placeholder="Enter Your Roll Number"
+                value={signupInfo.rollnumber}
               />
             </div>
 
             <div>
               <label className="text-slate-300 text-sm font-medium mb-2 block">Role</label>
               <input
-                name="rollNumber"
+                onChange={handleChange}
+                name="role"
                 type="text"
                 className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
                 placeholder="Enter Your Role"
+                value={signupInfo.role}
               />
             </div>
 
@@ -88,11 +124,12 @@ const Signup = () => {
 
           <p className="text-slate-600 text-sm mt-6 text-center">
             Already have an account?{' '}
-            <a href="javascript:void(0);" className="text-blue-600 font-medium hover:underline ml-1">
-              Login here
-            </a>
+            <span className="text-blue-600 font-medium hover:underline ml-1">
+              <Link type='submit'  to='/login'>Login here</Link>
+            </span>
           </p>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

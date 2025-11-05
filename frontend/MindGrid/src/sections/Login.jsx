@@ -1,5 +1,6 @@
 import React from 'react';
 import Example from '../constants/EncryptButton';
+import { Link } from 'react-router-dom';
 
 
 const Login = () => {
@@ -78,10 +79,10 @@ const Login = () => {
           </div>
 
           <p className="text-slate-600 text-sm mt-6 text-center">
-            Already have an account?{' '}
-            <a href="javascript:void(0);" className="text-blue-600 font-medium hover:underline ml-1">
-              Login here
-            </a>
+            Don't have an account?{' '}
+            <span  className="text-blue-600 font-medium hover:underline ml-1">
+              <Link to='/signup'>Signup here</Link>
+            </span>
           </p>
         </form>
       </div>

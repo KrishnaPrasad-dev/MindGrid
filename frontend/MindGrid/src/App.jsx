@@ -6,6 +6,9 @@ import Explore from './sections/Explore'
 import Clubmembers from './sections/Clubmembers';
 import Signup from './sections/Signup';
 import Login from './sections/Login';
+import 'react-toastify/ReactToastify.css'
+
+
 const App = () => {
   return (
       
