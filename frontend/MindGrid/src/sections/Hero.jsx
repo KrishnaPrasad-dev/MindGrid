@@ -79,7 +79,7 @@ const Hero = () => {
   <GlowingCard 
   className="relative "
   title="MindGrid Club" 
-  description="This picture of mindgrid club members." 
+  description="These are our club members." 
 />
     </section>
   );
