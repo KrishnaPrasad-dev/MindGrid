@@ -20,7 +20,7 @@ const Explore = () => {
 
     <div className="xl:col-span-2 xl:row-span-3">
       <div className="grid-container min-h-64 sm:min-h-72 md:min-h-80 xl:h-full">
-        <span className='flex flex-row'>
+        <span className='flex sm:flex-col flex-row'>
         <div>
             <div className='text-white font-bold text-4xl'>Club Members</div>
             <p className='mt-16 mb-5 text-white  text-2xl w-[95%]'>"Want to see who’s part of the club? Here’s a quick look at the members and what they’re all about."</p>
