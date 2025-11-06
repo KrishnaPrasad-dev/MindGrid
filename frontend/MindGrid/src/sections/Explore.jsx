@@ -10,12 +10,12 @@ const Explore = () => {
     <div>
         <Navbar />
 
-       <div className='flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-5xl text-transparent sm:text-7xl mt-36 items-center justify-center relative mx-auto text-center'>
+       <div className='flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-5xl text-transparent sm:text-7xl mt-36 items-center justify-center relative  text-center'>
   Explore page
 </div>
 
 
-       <section className="c-space mt-36 p-11 min-h-screen" id="explore">
+       <section className="c-space sm:mt-20 p-11 min-h-screen" id="explore">
   <div className="grid xl:grid-cols-3 xl:grid-rows-6 md:grid-cols-2 grid-cols-1 gap-5 h-full">
 
     <div className="xl:col-span-2 xl:row-span-3">
@@ -24,21 +24,18 @@ const Explore = () => {
         <div>
             <div className='text-white font-bold text-4xl'>Club Members</div>
             <p className='mt-16 mb-5 text-white  text-2xl w-[95%]'>"Want to see who’s part of the club? Here’s a quick look at the members and what they’re all about."</p>
-
-      
+            <span className='relative items-center  justify-center flex'>
+            <img src={clubmem} className=' relative  sm:h-72 ' alt="" />
+            </span>
               <Link to="/clubmembers">
-  <span className="relative ml-1 flex px-6 py-3 font-bold text-white rounded-lg group cursor-pointer">
+  <span className='relative items-center justify-center mt-6 flex '><span className="relative  px-6 py-3 font-bold text-white rounded-lg group">
     <span className="absolute inset-0 w-full h-full transition duration-300 transform -translate-x-1 -translate-y-1 bg-purple-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0"></span>
     <span className="absolute inset-0 w-full h-full transition duration-300 transform translate-x-1 translate-y-1 bg-pink-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0 mix-blend-screen"></span>
-    <span className="relative">View Members</span>
-  </span>
+    <span className="relative sm:p-6 sm:px-24">View Members</span></span></span>
 </Link>
 
         </div>
-        <div>
-          <img src={clubmem} className='h-62 w-62 relative ' alt="" />
-          
-        </div>
+        
         </span> 
         
       </div>
@@ -55,12 +52,12 @@ const Explore = () => {
             Events
           </div>
           <p className='mt-16 mb-5 text-white  text-2xl w-[95%]'>"Check out the vibrant moments from our club events! Through the images gallery...</p>
-          <span><img src={events}  className='h-64 w-64 relative' alt="" /></span>
+          <span><img src={events}  className='h-64 mt-16 w-64 relative' alt="" /></span>
 
-          <span className='relative left-[20%] mt-6 flex '><a href="#_" className="relative  px-6 py-3 font-bold text-white rounded-lg group">
+          <span className='relative items-center  justify-center mt-20 flex '><a href="#_" className="relative  px-6 py-3 font-bold text-white rounded-lg group">
     <span className="absolute inset-0 w-full h-full transition duration-300 transform -translate-x-1 -translate-y-1 bg-purple-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0"></span>
     <span className="absolute inset-0 w-full h-full transition duration-300 transform translate-x-1 translate-y-1 bg-pink-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0 mix-blend-screen"></span>
-    <span className="relative">View Events</span></a></span>
+    <span className="relative sm:p-3 sm:px-16">View Events</span></a></span>
 
         </div>
 
