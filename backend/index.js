@@ -7,18 +7,18 @@ require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
 
-// ===== CORS Configuration (Place BEFORE other middleware) =====
+// ===== UPDATE THIS CORS SECTION =====
 app.use(cors({
   origin: [
-    'https://mind-grid-krishnaprasad-devs-projects.vercel.app/', // ← Replace with your actual frontend Vercel URL
-    'http://localhost:5173', // For local Vite development
-    'http://localhost:5174'  // Backup port
+    'https://mind-grid-tau.vercel.app',  // ← Your frontend URL
+    'http://localhost:5173',              // For local development
+    'http://localhost:5174'               // Backup port
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-// ===== End CORS Configuration =====
+// ===== END CORS SECTION =====
 
 app.use(bodyParser.json());
 
@@ -30,10 +30,10 @@ app.get('/ping', (req, res) => {
 // Auth routes
 app.use('/auth', AuthRouter);
 
-// ===== Export for Vercel (Serverless) =====
+// ✅ Export for Vercel
 module.exports = app;
 
-// ===== Local Development Server Only =====
+// ✅ Only listen locally
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
