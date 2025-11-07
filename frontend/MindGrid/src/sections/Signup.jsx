@@ -6,9 +6,10 @@ import { useState } from 'react';
 import { handleError, handleSuccess } from './Utils';
 import CardSpotlight from '../constants/CardSpotlight';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 
 const Signup = () => {
-
 
   const [signupInfo, setSignupInfo] = useState({
       name: '',
@@ -18,9 +19,7 @@ const Signup = () => {
       role: ''
   })
 
-
   const navigate = useNavigate();
-
 
   const handleChange = (e)=>{
     const {name,value} =e.target;
@@ -30,14 +29,16 @@ const Signup = () => {
     setSignupInfo(copySignUpInfo);
   }
 
-
   const handleSignup = async (e)=>{
     e.preventDefault();
     const { name , email , password , rollnumber, role} = signupInfo;
     if(!name || !email || !password || !rollnumber || !role){
         return handleError('All Credentials are required');
     }try{
-        const url = "http://localhost:8080/auth/signup";
+        // ===== UPDATED: Use API_URL variable instead of hardcoded localhost =====
+        const url = `${API_URL}/auth/signup`;
+        // =======================================================================
+        
         const response = await fetch(url,{
           method:"POST",
         headers:{
@@ -64,25 +65,18 @@ const Signup = () => {
         handleError(err);
     }   
   }
-  
-
-
 
   return (
-
-
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="fixed inset-0 w-screen h-screen bg-slate-950 z-0">
         <div className="absolute bottom-0 left-[-20vw] top-[-10vh] h-[40vw] w-[40vw] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,0.15),rgba(255,255,255,0))]"></div>
         <div className="absolute bottom-0 right-[-20vw] top-[-10vh] h-[40vw] w-[40vw] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,0.15),rgba(255,255,255,0))]"></div>
       </div>
 
-
       <div className='flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-6xl text-transparent sm:text-7xl  sm:mt-32 mt-[80px] items-center justify-center relative mx-auto text-center mb-8'>
         Sign Up
       </div>
     
-
       <CardSpotlight>
         <div className="max-w-md  w-[90%] mx-auto rounded-2xl   sm:mt-12 mb-12 p-2  sm:p-2 relative z-10">
           <form onSubmit={handleSignup}>
@@ -165,6 +159,5 @@ const Signup = () => {
     </div>
   );
 };
-
 
 export default Signup;
