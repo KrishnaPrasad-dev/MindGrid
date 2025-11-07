@@ -7,7 +7,6 @@ import Clubmembers from './sections/Clubmembers';
 import Signup from './sections/Signup';
 import Login from './sections/Login';
 import 'react-toastify/ReactToastify.css'
-import Profile from './sections/Profile';
 
 
 const App = () => {
@@ -22,8 +21,6 @@ const App = () => {
           <Route path="/hero" element={<Hero />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/Clubmembers" element={<Clubmembers />} />
-          <Route path="/profile" element={<Profile />} />
-
         </Routes>
       </main>
     
