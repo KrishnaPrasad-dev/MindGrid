@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8080;
 // ===== UPDATE THIS CORS SECTION =====
 app.use(cors({
   origin: [
-    'https://mind-grid-tau.vercel.app',  // ← Your frontend URL
+    'https://mindgrid-gnu.vercel.app',  // ← Your frontend URL
     'http://localhost:5173',              // For local development
     'http://localhost:5174'               // Backup port
   ],
