@@ -22,6 +22,11 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.send("MindGrid backend is running ✅");
+});
+
+
 // Test route
 app.get('/ping', (req, res) => {
     res.send("PONG");

@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Navbar from './Navbar';
-import crown from '../assets/crown.png'
-import assist from '../assets/assistant.png'
-import treasurer from '../assets/treasure.png'
-import remove from '../assets/x-button.png'
-import cmpwrk from '../assets/computer-worker.png'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-import Profile from './Profile';
+import Navbar from "./Navbar";
+import crown from "../assets/crown.png";
+import pfpblu from "../assets/profileblue.jpeg";
 
-import crownvp from '../assets/crownvp.png'
 const Clubmembers = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [members, setMembers] = useState([]);
 
-  const toggleDropdown = (e) => {
-    e.preventDefault(); // prevent default anchor behavior if inside <a>
-    setDropdownOpen(!dropdownOpen);
-  };
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await axios.get("https://mindgrid-backend.vercel.app/api/users/all"); // 👈 replace with your backend URL
+        setMembers(res.data);
+      } catch (err) {
+        console.error("Error fetching members:", err);
+      }
+    };
+    fetchMembers();
+  }, []);
 
   return (
     <div>
@@ -33,22 +36,30 @@ const Clubmembers = () => {
           </h5>
 
           <ul className="my-4 space-y-3">
+            {members.map((member) => (
+              <li key={member._id}>
+                <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer">
+                  <div className="flex ml-1 mr-1 sm:ml-2 sm:mr-2 relative">
+                    <Link
+                      to={`/profile/${member._id}`}
+                      className="flex items-center gap-2 sm:gap-3"
+                    >
+                      <img
+                        src={member.profilePic || pfpblu}
+                        className="rounded-full h-6 w-6 sm:h-7 sm:w-7"
+                        alt="Profile"
+                      />
+                      <p className="sm:text-lg">{member.name}</p>
+                    </Link>
+                  </div>
 
-            <li className="relative">
-              <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer">
-                
-                <Link to='/profile'>
-                <p className="ml-2 mr-2">Krishna Prasad</p>
-                </Link>
-                <div>
+                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-3 py-2.5 sm:px-5 sm:py-2.5 sm:text-base inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    {member.role || "Member"}
+                    <img src={crown} className="ml-2 h-4 w-4" alt="crown" />
+                  </button>
                 </div>
-                <button className='text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
-                  club members
-                  <img src={crown} className='ml-2 h-4 w-4' alt="crown" />
-                </button>
-              </div>
-            </li>
-            
+              </li>
+            ))}
           </ul>
         </div>
       </div>
