@@ -12,7 +12,7 @@ const Clubmembers = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await axios.get("https://your-backend-url/all"); // 👈 replace with your backend URL
+        const res = await axios.get("https://mindgrid-backend.vercel.app/all"); // 👈 replace with your backend URL
         setMembers(res.data);
       } catch (err) {
         console.error("Error fetching members:", err);
