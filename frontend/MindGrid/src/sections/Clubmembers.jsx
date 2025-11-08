@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-
+import axios from 'axios'
 import Navbar from "./Navbar";
 import crown from "../assets/crown.png";
 import pfpblu from "../assets/profileblue.jpeg";
