@@ -31,7 +31,7 @@ app.use(
 );
 
 // handle preflight requests
-app.options('*', cors());
+app.options(/.*/, cors());
 // ===== END CORS SECTION =====
 
 app.use(bodyParser.json());
