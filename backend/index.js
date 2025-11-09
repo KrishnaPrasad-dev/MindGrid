@@ -48,10 +48,8 @@ app.get('/ping', (req, res) => {
 // Auth routes
 app.use('/auth', AuthRouter);
 
-// ✅ Export for Vercel
 module.exports = app;
 
-// ✅ Only listen locally (for dev)
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
