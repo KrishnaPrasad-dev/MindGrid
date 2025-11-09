@@ -2,7 +2,7 @@ import React from "react";
 import pfp from '../assets/profileblue.jpeg'
 
 const Profile = ({
-  name = "Krishna Prasad",
+  name = "J Krishna Prasad",
   title = "Full Stack Web Developer",
   role = 'club member',
   bio = `I am Krishna Prasad from GuruNanak Univeristy , I have a deep love for coding, and it is my true passion that drives me to constantly learn, create, and solve problems through programming.`,
