@@ -1,10 +1,13 @@
-import User from "../Models/User.js";
+// controllers/userController.js (CommonJS)
+const User = require('../Models/User');
 
-export const getAllUsers = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, "name role rollNumber email"); // exclude password
-    res.json(users);
+    // include _id explicitly; use the same field name you save in signup: rollnumber
+    const users = await User.find({}, '_id name role rollnumber email');
+    return res.json(users);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error('getAllUsers ERROR:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };

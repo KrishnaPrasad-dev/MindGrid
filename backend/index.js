@@ -6,6 +6,7 @@ const AuthRouter = require('./Routes/AuthRouter');
 require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
+const UserRouter = require('./Routes/UserRoutes');
 
 // ===== FIXED CORS SECTION =====
 const allowedOrigins = [
@@ -47,6 +48,11 @@ app.get('/ping', (req, res) => {
 
 // Auth routes
 app.use('/auth', AuthRouter);
+// in your main server file (index.js / app.js)
+ // adjust path if needed
+app.use('/users', UserRouter);
+
+
 
 module.exports = app;
 
