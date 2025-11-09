@@ -54,8 +54,9 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success:false, message: err?.message || 'Server error' });
 });
 
-if (require.main === module) {
+// Only start a long-lived server when running locally (not on Vercel)
+
+if (require.main === module && !process.env.VERCEL) {
+  const PORT = process.env.PORT || 8080;
   app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
 }
-
-module.exports = app;
