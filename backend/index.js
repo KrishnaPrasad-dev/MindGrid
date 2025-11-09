@@ -5,7 +5,7 @@ const cors = require('cors');
 
 require('dotenv').config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.MONGO_CONN || 8080;
 
 // ===== SAFE CORS =====
 const allowedOrigins = [
