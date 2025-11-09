@@ -3,7 +3,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const AuthRouter = require('./Routes/AuthRouter');
-const { getAllUsers } = require('./controllers/userController');
 require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
@@ -48,7 +47,7 @@ app.get('/ping', (req, res) => {
 
 // Auth routes
 app.use('/auth', AuthRouter);
-app.use('/all', getAllUsers)
+
 
 // ✅ Export for Vercel
 module.exports = app;
