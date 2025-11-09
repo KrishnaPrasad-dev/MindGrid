@@ -3,11 +3,10 @@ const User = require('../Models/User');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    // select only the fields you want to expose
-    const users = await User.find({}, 'name email rollnumber role').lean();
-    return res.json({ success: true, data: users });
+    const users = await User.find({}, '_id name role rollnumber email '); // select needed fields
+    return res.json(users);
   } catch (err) {
     console.error('getAllUsers ERROR:', err);
-    return res.status(500).json({ success: false, message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
