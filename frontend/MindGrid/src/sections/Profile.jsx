@@ -7,7 +7,7 @@ const Profile = ({
   role = 'club member',
   bio = `I am Krishna Prasad from GuruNanak Univeristy , I have a deep love for coding, and it is my true passion that drives me to constantly learn, create, and solve problems through programming.`,
   avatarUrl = "", // Default image file path
-  skills = ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS"],
+  skills = ["Javascript", "React", "Node.js", "MongoDB", "Express", "Html", "css", "Postman","Tailwind CSS"],
   
   resumeUrl = "#",
   socials = {
