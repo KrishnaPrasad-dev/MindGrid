@@ -5,7 +5,7 @@ const Profile = ({
   name = "Krishna Prasad",
   title = "Full Stack Web Developer",
   role = 'club member',
-  bio = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet. Etiam dictum dapibus ultricies. Sed vel aliquet libero.`,
+  bio = `I am Krishna Prasad from GuruNanak Univeristy , I have a deep love for coding, and it is my true passion that drives me to constantly learn, create, and solve problems through programming.`,
   avatarUrl = "", // Default image file path
   skills = ["React", "Node.js", "MongoDB", "Express", "Tailwind CSS"],
   
