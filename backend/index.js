@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 require('./Models/db'); // make sure this connects mongoose
 const AuthRouter = require('./Routes/AuthRouter');
-const UserRouter = require('./Routes/UserRoutes');
+const UserRouter = require('./Routes/UserRouter');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
