@@ -92,7 +92,7 @@ const Login = () => {
               <div>
                 <label className="text-slate-300 text-sm font-medium mb-2 block">Email Id</label>
                 <input
-                  onCha1nge={handleChange}
+                  onChange={handleChange}
                   name="email"
                   type="text"
                   className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
