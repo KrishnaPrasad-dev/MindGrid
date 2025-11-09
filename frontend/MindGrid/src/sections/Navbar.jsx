@@ -91,25 +91,40 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className={`nav-sidebar ${isOpen ? 'max-h-screen' : 'max-h-0'}`}>
-        <nav className="p-5">
-          <NavItems onClick={closeMenu} />
-          
-          <button
-            onClick={handleLogout}
-             className="relative inline-flex items-center justify-center px-5 mt-2 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group">
-    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
-    <span className="absolute top-0 left-0 w-full bg-gradient-to-b from-white to-transparent opacity-5 h-1/3"></span>
-    <span className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-white to-transparent opacity-5"></span>
-    <span className="absolute bottom-0 left-0 w-4 h-full bg-gradient-to-r from-white to-transparent opacity-5"></span>
-    <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
-    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
-    <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
-    <span className="relative">Logout</span>
-            </button>
+    <div className={`nav-sidebar ${isOpen ? 'max-h-screen' : 'max-h-0'}`}>
+  <nav className="p-5 flex flex-col h-full justify-between">
+    {/* Top section with NavItems and Profile */}
+    <div>
+      <NavItems onClick={closeMenu} />
 
-        </nav>
-      </div>
+      {/* Profile link - comes right after About (which is in NavItems) */}
+      <Link to="/profile">
+        <button className="ml-5 mt-3 text-neutral-400 hover:text-white font-generalsans font-bold nav-li_a">
+          Profile
+        </button>
+      </Link>
+    </div>
+
+    {/* Bottom section with Logout */}
+    <div className="flex ml-4 mt-6">
+      <button
+        onClick={handleLogout}
+        className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+      >
+        <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+        <span className="absolute top-0 left-0 w-full bg-gradient-to-b from-white to-transparent opacity-5 h-1/3"></span>
+        <span className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-white to-transparent opacity-5"></span>
+        <span className="absolute bottom-0 left-0 w-4 h-full bg-gradient-to-r from-white to-transparent opacity-5"></span>
+        <span className="absolute bottom-0 right-0 w-4 h-full bg-gradient-to-l from-white to-transparent opacity-5"></span>
+        <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+        <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
+        <span className="relative">Logout</span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+      
     </header>
   );
 };

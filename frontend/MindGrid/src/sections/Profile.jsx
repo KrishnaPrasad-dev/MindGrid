@@ -84,6 +84,7 @@ const Profile = ({
                 ))}
               </div>
             </div>
+            
 
             {/* Footer Section */}
             <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
