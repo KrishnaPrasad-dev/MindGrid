@@ -1,3 +1,4 @@
+console.log("⚙️ AuthRouter is loading");
 const { signup, login } = require('../Controllers/AuthController');
 const { signupValidation, loginValidation } = require('../Middlewares/AuthValidation');
 
