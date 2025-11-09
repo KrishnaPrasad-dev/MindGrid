@@ -3,7 +3,7 @@ const User = require('../Models/User');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, '_id name role rollnumber email profilePic'); // select needed fields
+    const users = await User.find({}, '_id name role rollnumber email '); // select needed fields
     return res.json(users);
   } catch (err) {
     console.error('getAllUsers ERROR:', err);
