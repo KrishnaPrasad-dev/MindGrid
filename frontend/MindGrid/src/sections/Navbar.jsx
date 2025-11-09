@@ -72,6 +72,9 @@ const Navbar = () => {
 
           <nav className="sm:flex hidden">
             <NavItems />
+            <Link to='/profile' className='nav-li'>
+            <button className=' ml-5 text-neutral-400 hover:text-white font-generalsans  font-bold nav-li_a '>Profile</button>
+            </Link>
             <button
             onClick={handleLogout}
              className="relative inline-flex items-center justify-center px-5 ml-7 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group">
@@ -91,6 +94,7 @@ const Navbar = () => {
       <div className={`nav-sidebar ${isOpen ? 'max-h-screen' : 'max-h-0'}`}>
         <nav className="p-5">
           <NavItems onClick={closeMenu} />
+          
           <button
             onClick={handleLogout}
              className="relative inline-flex items-center justify-center px-5 mt-2 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group">
@@ -103,6 +107,7 @@ const Navbar = () => {
     <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
     <span className="relative">Logout</span>
             </button>
+
         </nav>
       </div>
     </header>

@@ -3,21 +3,21 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const AuthRouter = require('./Routes/AuthRouter');
+const UserRouter = require('./Routes/UserRouter');  // Import UserRouter
 require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
 
-// ===== FIXED CORS SECTION =====
+// CORS setup
 const allowedOrigins = [
-  'https://mindgrid-gnu.vercel.app', // ✅ your deployed frontend
-  'http://localhost:5173',           // local dev
+  'https://mindgrid-gnu.vercel.app',
+  'http://localhost:5173',
   'http://localhost:5174'
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps, curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -30,29 +30,25 @@ app.use(
   })
 );
 
-// handle preflight requests
 app.options(/.*/, cors());
-// ===== END CORS SECTION =====
-
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('MindGrid backend is running ✅');
 });
 
-// Test route
 app.get('/ping', (req, res) => {
   res.send('PONG');
 });
 
-// Auth routes
+// Mount routers normally
 app.use('/auth', AuthRouter);
+app.use('/users', UserRouter);  // Mount UserRouter
 
-
-// ✅ Export for Vercel
+// Export for Vercel
 module.exports = app;
 
-// ✅ Only listen locally (for dev)
+// Listen for local dev only
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);

@@ -8,11 +8,6 @@ export const navLinks = [
     id: 2,
     name: 'About'
     
-  },
-  {
-    id: 3,
-    name: 'Work'
-    
   }
 ];
 

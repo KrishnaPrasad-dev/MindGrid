@@ -8,6 +8,20 @@
   scroll-behavior: smooth;
 }
 
+@keyframes bgMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+.animate-bgMove {
+  animation: bgMove 10s linear infinite alternate;
+}
+
+
 body {
   background: #010103;
   font-family: 'General Sans', sans-serif;
