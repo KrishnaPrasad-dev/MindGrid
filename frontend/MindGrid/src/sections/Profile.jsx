@@ -33,9 +33,9 @@ const Profile = ({
                 alt={`${name} avatar`}
                 className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-indigo-500/40 shadow-lg"
               />
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gray-800/70 px-3 py-1 rounded-full text-xs text-gray-200 backdrop-blur">
+              {/* <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gray-800/70 px-3 py-1 rounded-full text-xs text-gray-200 backdrop-blur">
                 Available for hire
-              </span>
+              </span> */}
             </div>
           </div>
 
@@ -61,11 +61,11 @@ const Profile = ({
               </div>
             </div>
 
-            <p className="mt-6 text-gray-300 leading-relaxed text-sm md:text-base">{bio}</p>
+            <p className="mt-6 text-gray-300  leading-relaxed  md:text-base">{bio}</p>
 
             {/* Skills Section */}
             <div className="mt-6">
-              <h3 className="text-sm text-indigo-200 font-semibold mb-3">Skills</h3>
+              <h3 className="text-md text-indigo-200 font-semibold mb-3">Skills</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((s) => (
                   <span
@@ -90,17 +90,12 @@ const Profile = ({
               
 
               <div className="flex gap-3">
-                <a
-                  href={`mailto:hello@example.com`}
-                  className="px-4 py-2 rounded-lg bg-transparent border border-gray-700 hover:border-indigo-500 transition text-sm text-gray-200"
-                >
-                  Message
-                </a>
+                
                 <a
                   href={resumeUrl}
                   className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-sm text-white"
                 >
-                  Hire Me
+                  Contact Me
                 </a>
               </div>
             </div>
@@ -109,7 +104,7 @@ const Profile = ({
 
         {/* Footer */}
         <div className="mt-4 text-center text-xs text-gray-400 pb-2">
-          Designed with ❤️ • Tailwind CSS
+          -------Krishna prasad------- 
         </div>
       </div>
     </section>
