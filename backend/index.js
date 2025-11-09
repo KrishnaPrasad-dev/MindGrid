@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 8080;
 
 // ===== FIXED CORS SECTION =====
 const allowedOrigins = [
-  'https://mindgrid-gnu.vercel.app', // ✅ your deployed frontend
+  'https://mindgrid-gnu.vercel.app', // ✅ deployed frontend
   'http://localhost:5173',           // local dev
   'http://localhost:5174'
 ];
@@ -36,6 +36,7 @@ app.options(/.*/, cors());
 
 app.use(bodyParser.json());
 
+// Default test route
 app.get('/', (req, res) => {
   res.send('MindGrid backend is running ✅');
 });
@@ -45,7 +46,7 @@ app.get('/ping', (req, res) => {
   res.send('PONG');
 });
 
-// Auth routes
+// Auth routes (login/signup)
 app.use('/auth', AuthRouter);
 
 // ✅ Export for Vercel
