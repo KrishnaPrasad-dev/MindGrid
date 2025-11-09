@@ -1,3 +1,5 @@
+console.log("✅ AuthRouter imports success");
+
 // controllers/authController.js
 const UserModel = require("../Models/User");
 const bcrypt = require("bcrypt");
