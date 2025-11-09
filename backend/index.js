@@ -1,7 +1,7 @@
 // index.js (safer)
 const express = require('express');
 const app = express();
-const cors = require('cors');
+const cors = require('cors')
 const AuthRouter = require('./Routes/AuthRouter');
 const UserRouter = require('./Routes/UserRouter');
 require('dotenv').config();
