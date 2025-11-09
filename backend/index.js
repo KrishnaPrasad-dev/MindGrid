@@ -33,7 +33,8 @@ app.use(cors({
 }));
 
 // Handle preflight
-app.options('*', cors());
+// fixed — use a RegExp to match any path
+app.options(/.*/, cors());
 
 // JSON parser
 app.use(bodyParser.json());
