@@ -13,7 +13,7 @@ import Profile from './sections/Profile';
 const App = () => {
   return (
       
-      <main className="max-w-7xl mx-auto relative">
+      <main>
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to='/login' />}/>

@@ -19,11 +19,11 @@ const Profile = ({
   return (
     <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1  overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
+      <div className="absolute  inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
 
       {/* Profile Card */}
-      <div className="relative w-[90%] bg-gradient-to-br from-gray-800/60 via-gray-900 to-black/60 rounded-2xl shadow-2xl z-10 p-1">
-        <div className="rounded-2xl bg-gradient-to-b from-gray-900 to-gray-800 p-8 md:p-12 flex flex-col md:flex-row gap-8">
+      <div className="relative w-[90%] bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90 rounded-2xl shadow-2xl z-10 p-1">
+        <div className="rounded-2xl bg-gradient-to-b p-8 md:p-12 flex flex-col md:flex-row gap-8">
           
           {/* Left Side - Profile Image */}
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">
@@ -70,9 +70,16 @@ const Profile = ({
                 {skills.map((s) => (
                   <span
                     key={s}
-                    className="px-3 py-1 rounded-full bg-gray-800/50 text-xs text-gray-100 font-medium"
+                    
                   >
-                    {s}
+                      <span className='relative inline-block overflow-hidden rounded-full p-[2px]'>
+      <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
+      <div className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-3 py-1 text-xs font-medium text-gray-50 backdrop-blur-3xl'>
+        {s}
+      </div> 
+    </span>
+
+                    
                   </span>
                 ))}
               </div>
