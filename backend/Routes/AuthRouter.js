@@ -1,6 +1,5 @@
 console.log("⚙️ AuthRouter loaded START");
-const path = require("path");
-console.log("Current dir:", __dirname);
+
 
 const { signup, login } = require('../Controllers/AuthController');
 const { signupValidation, loginValidation } = require('../Middlewares/AuthValidation');
