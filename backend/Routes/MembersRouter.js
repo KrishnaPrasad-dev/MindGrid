@@ -1,22 +1,39 @@
-// Routes/MembersRouter.js
+// backend/Routes/MembersRouter.js
 const express = require('express');
 const router = express.Router();
-const UserModel = require('../Models/User');
-const requireAuth = require('../Middlewares/RequireAuth');
+const UserModel = require('../Models/User'); // adjust path if needed
 
-// GET /members → returns all users (name, role)
-router.get('/', requireAuth, async (req, res) => {
+// GET /members
+// public: returns list of members (exclude password)
+router.get('/', async (req, res) => {
   try {
-    // Optional: Only allow director/admin to fetch all members
-    // if (req.user.role !== 'director' && req.user.role !== 'admin') {
-    //   return res.status(403).json({ message: 'Access denied' });
-    // }
-
-    const members = await UserModel.find({}, 'name role').sort({ name: 1 }); // only name, role
-    res.status(200).json({ success: true, count: members.length, members });
+    const members = await UserModel.find({}, '-password -__v').lean();
+    res.status(200).json({ success: true, members });
   } catch (err) {
-    console.error("Fetch members error:", err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('GET /members error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch members' });
+  }
+});
+
+// GET /members/:id
+// public: return single member by id (exclude password)
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Validate simple length to avoid expensive DB errors (optional)
+    if (!id || id.length < 6) {
+      return res.status(400).json({ success: false, message: 'Invalid id' });
+    }
+
+    const member = await UserModel.findById(id).select('-password -__v').lean();
+    if (!member) {
+      return res.status(404).json({ success: false, message: 'Profile not found' });
+    }
+
+    res.status(200).json({ success: true, member });
+  } catch (err) {
+    console.error('GET /members/:id error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' });
   }
 });
 
