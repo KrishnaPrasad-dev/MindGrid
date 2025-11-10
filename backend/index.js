@@ -7,6 +7,9 @@ const AuthRouter = require('./Routes/AuthRouter');
 require('dotenv').config();
 require('./Models/db');
 const PORT = process.env.PORT || 8080;
+const MembersRouter = require('./Routes/MembersRouter');
+
+
 
 // ===== FIXED CORS SECTION =====
 const allowedOrigins = [
@@ -42,8 +45,10 @@ app.get('/ping', (req, res) => {
   res.send('PONG');
 });
 
+
 // Auth routes
 app.use('/auth', AuthRouter);
+app.use('/members', MembersRouter);
 
 
 // Export for Vercel

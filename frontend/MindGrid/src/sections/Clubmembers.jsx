@@ -10,18 +10,52 @@ const Clubmembers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ✅ Fetch all club members (protected route)
   useEffect(() => {
     const fetchMembers = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const res = await axios.get("https://mindgrid-backend.vercel.app/users/all");
-        setMembers(res.data || []);
+        // Get token from localStorage
+        const token =
+          localStorage.getItem("token") ||
+          localStorage.getItem("jwtToken") ||
+          sessionStorage.getItem("token");
+
+        if (!token) {
+          setError("You must be logged in to view members.");
+          setLoading(false);
+          return;
+        }
+
+        // Make API call
+        const res = await axios.get(
+          "https://mindgrid-backend.vercel.app/members",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.data.success) {
+          throw new Error(res.data.message || "Failed to fetch members");
+        }
+
+        setMembers(res.data.members || []);
       } catch (err) {
-        console.error("Error fetching members:", err);
-        setError(err.response?.data?.message || err.message || "Network error");
+        console.error("❌ Error fetching members:", err);
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Network error while fetching members"
+        );
       } finally {
         setLoading(false);
       }
     };
+
     fetchMembers();
   }, []);
 
@@ -29,10 +63,12 @@ const Clubmembers = () => {
     <div>
       <Navbar />
 
+      {/* Page Title */}
       <div className="flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-5xl text-transparent sm:text-7xl mt-36 items-center justify-center relative mx-auto text-center">
         Club Members
       </div>
 
+      {/* Members List */}
       <div className="relative mt-28 px-4">
         <div className="w-full max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 dark:bg-gray-950 dark:border-gray-700">
           <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white">
@@ -51,8 +87,15 @@ const Clubmembers = () => {
                 <li key={member._id}>
                   <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer">
                     <div className="flex ml-1 mr-1 sm:ml-2 sm:mr-2 relative">
-                      <Link to={`/profile/${member._id}`} className="flex items-center gap-2 sm:gap-3">
-                        <img src={member.profilePic || pfpblu} className="rounded-full h-6 w-6 sm:h-7 sm:w-7" alt="Profile" />
+                      <Link
+                        to={`/profile/${member._id}`}
+                        className="flex items-center gap-2 sm:gap-3"
+                      >
+                        <img
+                          src={member.profilePic || pfpblu}
+                          className="rounded-full h-6 w-6 sm:h-7 sm:w-7"
+                          alt="Profile"
+                        />
                         <p className="sm:text-lg">{member.name}</p>
                       </Link>
                     </div>
