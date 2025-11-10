@@ -232,6 +232,18 @@ const Profile = (props) => {
                   <div>
                     <h1 className="text-2xl md:text-4xl font-extrabold text-white">{user.name}</h1>
                     <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{user.title}</p>
+                    
+                     <div className="flex items-center mt-4 gap-3">
+                <a
+                  
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-white text-sm shadow-md"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v12m0 0l4-4m-4 4l-4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6" />
+                  </svg>
+                  <span>Resume</span>
+                </a>
+              </div>
                     <div className="mt-5 inline-flex h-12 items-center justify-center rounded-md  font-medium text-white">
                       <button className='inline-flex text-white text-xl h-12 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50'>
       {user.role}
