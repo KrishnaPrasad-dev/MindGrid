@@ -52,7 +52,7 @@ const Profile = (props) => {
     role: props.role || "Club Member",
     bio:
       props.bio ||
-      `I am Krishna Prasad from GuruNanak Univeristy. I have a deep love for coding, and it drives me to constantly learn, create, and solve problems.`,
+      `I am from GuruNanak Univeristy. I have a deep love for coding, and it drives me to constantly learn, create, and solve problems.`,
     avatarUrl: props.avatarUrl || "",
     skills: props.skills || [
       "Javascript",
@@ -215,7 +215,7 @@ const Profile = (props) => {
                 className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-indigo-500/40 shadow-lg"
               />
               <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/70 px-4 py-2 rounded-full text-md text-gray-200">
-                CSE-6
+                CSE
               </span>
             </div>
           </div>
@@ -232,9 +232,12 @@ const Profile = (props) => {
                   <div>
                     <h1 className="text-2xl md:text-4xl font-extrabold text-white">{user.name}</h1>
                     <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{user.title}</p>
-                    <div className="mt-5 inline-flex h-12 items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] px-3 font-medium text-white">
-                      {user.role}
+                    <div className="mt-5 inline-flex h-12 items-center justify-center rounded-md  font-medium text-white">
+                      <button className='inline-flex h-12 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50'>
+      {user.role}
                       <img src={mem} alt="group" className="ml-2 w-9 h-10" />
+    </button>
+                      
                     </div>
                   </div>
                 </div>
@@ -242,20 +245,33 @@ const Profile = (props) => {
                 <p className="mt-6 text-gray-300 leading-relaxed md:text-base">{user.bio}</p>
 
                 <div className="mt-6">
-                  <h3 className="text-md text-indigo-200 font-semibold mb-3">Skills</h3>
+                  <h3 className="text-xl text-indigo-200 font-bold mb-3">Skills</h3>
                   <div className="flex flex-wrap gap-2">
                     {user.skills.map((s) => (
                       <span key={s} className="relative inline-block overflow-hidden rounded-full p-[2px]">
-                        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                        <div className="inline-flex h-full w-full items-center justify-center rounded-full bg-gray-950 px-3 py-1 text-xs font-medium text-gray-50">
-                          {s}
-                        </div>
-                      </span>
+                        
+
+                      
+      <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
+      <div className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-gray-950 px-3 py-1 text-xs font-medium text-gray-50 backdrop-blur-3xl'>
+        {s}
+      </div>
+    </span>  
+
+
+
                     ))}
                   </div>
                 </div>
 
+
+<div>
+                      <h3 className="text-xl text-indigo-200 mt-5 font-bold mb-3">Contact</h3>
+                  </div>
                 <div className="mt-4 text-indigo-300 flex flex-row gap-3 font-medium text-lg md:text-xl">
+                  
+                  
+                    
                   <div className="h-11 bg-white w-11 rounded-md border">
                     <a href={user.githuburl || "#"} target="_blank" rel="noreferrer">
                       <img src={githubIcon} alt="github" />

@@ -26,15 +26,19 @@ export default {
       backgroundImage: {
         terminal: "url('/assets/terminal.png')",
       },
-      // ✅ Added animation and keyframes
+
+      // ✅ Added both animations and keyframes
       animation: {
         'background-shine': 'background-shine 2s linear infinite',
+        'spin-slow': 'spin 6s linear infinite', // 👈 used in your Profile component
       },
+
       keyframes: {
         'background-shine': {
           from: { backgroundPosition: '0 0' },
           to: { backgroundPosition: '-200% 0' },
         },
+        // Tailwind already has default `spin`, so we reuse it here
       },
     },
   },
