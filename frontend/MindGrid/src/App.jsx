@@ -23,6 +23,9 @@ const App = () => {
           <Route path="/explore" element={<Explore />} />
           <Route path="/Clubmembers" element={<Clubmembers />} />
           <Route path="/profile" element={<Profile />} />
+          
+          
+
 
         </Routes>
       </main>

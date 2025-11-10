@@ -2,22 +2,24 @@ import React from "react";
 import pfp from '../assets/profileblue.jpeg'
 import mem from '../assets/group.png'
 import pen from '../assets/pen.png'
+import github from '../assets/github.png'
+import linkedin from '../assets/linkedin.png'
+import { Link } from "react-router-dom";
+
 
 const Profile = ({
   name = "J Krishna Prasad",
   title = "Full Stack Web Developer",
   role = 'Club Member',
   bio = `I am Krishna Prasad from GuruNanak Univeristy , I have a deep love for coding, and it is my true passion that drives me to constantly learn, create, and solve problems through programming.`,
-  avatarUrl = "", // Default image file path
+  avatarUrl = "",
+  section = "",
   skills = ["Javascript", "React", "Node.js", "MongoDB", "Express", "Html", "css", "Postman","Tailwind CSS"],
   
   
-  resumeUrl = "#",
-  socials = {
-    github: "#",
-    linkedin: "#",
-    twitter: "#",
-  },
+  resumeUrl = "",
+  githuburl = "",
+  linkedinurl = ""
 }) => {
   return (
     <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1  overflow-hidden">
@@ -27,24 +29,17 @@ const Profile = ({
       {/* Profile Card */}
       <div className="relative w-[90%] bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90 rounded-2xl shadow-2xl z-10 p-1">
 
-    <div className="flex justify-end mr-1 mb-2">
+    <div className="flex justify-end mt-1 mr-1 mb-2">
 <button className='relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 '>
       <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
       <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-gray-950 px-2  text-sm font-medium text-gray-50 backdrop-blur-3xl'>
         <div className="flex justify-end  flex-row">
-            <p className="text-white mr-2 ml-1">Edit Profile</p>
+            <Link to='/editprofile' className="text-white mr-2  ml-1">Edit Profile</Link>
             <img src={pen} className="h-5 w-5 mr-1" alt="" />
           </div>
       </span>
     </button>
 </div>
-
-
-      
-
-
-
-
 
         <div className="rounded-2xl bg-gradient-to-b p-8 md:p-12 flex flex-col md:flex-row gap-8">
           
@@ -57,9 +52,9 @@ const Profile = ({
                 alt={`${name} avatar`}
                 className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-indigo-500/40 shadow-lg"
               />
-              {/* <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gray-800/70 px-3 py-1 rounded-full text-xs text-gray-200 backdrop-blur">
-                Available for hire
-              </span> */}
+              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/70  px-4 py-2 rounded-full  text-md text-gray-200 backdrop-blur">
+                CSE-6
+              </span>
             </div>
           </div>
 
@@ -127,18 +122,29 @@ const Profile = ({
                 
                 <a
                   href={resumeUrl}
-                  className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-sm text-white"
+                  className="text-md text-indigo-200 font-semibold mb-3"
                 >
                   Contact Me
                 </a>
               </div>
+              </div>
+              <div className="mt-4 text-indigo-300 flex flex-row gap-3 font-medium text-lg md:text-xl ">
+                <div className="h-11 bg-white w-11 rounded-md border border-2px ">
+                    <img src={github} alt="" />
+                </div>
+
+                <div className="h-11 bg-white w-11 rounded-md  ">
+                    <img src={linkedin} alt="" />
+                </div>
+                   
+                   
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="mt-4 text-center text-xs text-gray-400 pb-2">
-          -------Krishna prasad------- 
+          -------{name}------- 
         </div>
       </div>
     </section>
