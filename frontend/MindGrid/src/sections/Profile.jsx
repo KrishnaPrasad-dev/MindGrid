@@ -1,13 +1,16 @@
 import React from "react";
 import pfp from '../assets/profileblue.jpeg'
+import mem from '../assets/group.png'
+import pen from '../assets/pen.png'
 
 const Profile = ({
   name = "J Krishna Prasad",
   title = "Full Stack Web Developer",
-  role = 'club member',
+  role = 'Club Member',
   bio = `I am Krishna Prasad from GuruNanak Univeristy , I have a deep love for coding, and it is my true passion that drives me to constantly learn, create, and solve problems through programming.`,
   avatarUrl = "", // Default image file path
   skills = ["Javascript", "React", "Node.js", "MongoDB", "Express", "Html", "css", "Postman","Tailwind CSS"],
+  
   
   resumeUrl = "#",
   socials = {
@@ -23,7 +26,28 @@ const Profile = ({
 
       {/* Profile Card */}
       <div className="relative w-[90%] bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90 rounded-2xl shadow-2xl z-10 p-1">
+
+    <div className="flex justify-end mr-1 mb-2">
+<button className='relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 '>
+      <span className='absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]' />
+      <span className='inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-gray-950 px-2  text-sm font-medium text-gray-50 backdrop-blur-3xl'>
+        <div className="flex justify-end  flex-row">
+            <p className="text-white mr-2 ml-1">Edit Profile</p>
+            <img src={pen} className="h-5 w-5 mr-1" alt="" />
+          </div>
+      </span>
+    </button>
+</div>
+
+
+      
+
+
+
+
+
         <div className="rounded-2xl bg-gradient-to-b p-8 md:p-12 flex flex-col md:flex-row gap-8">
+          
           
           {/* Left Side - Profile Image */}
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">
@@ -41,11 +65,20 @@ const Profile = ({
 
           {/* Right Side - Info */}
           <div className="flex-1 text-gray-200">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex flex-col mt-12 sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h1 className="text-2xl md:text-4xl font-extrabold text-white">{name}</h1>
-                <p className="mt-1 text-indigo-300 font-medium text-lg md:text-xl">{title}</p>
-                <p className="mt-1 text-indigo-300 font-medium text-lg md:text-xl">{role}</p>
+                <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{title}</p>
+                <div className="mt-5 text-indigo-300 font-medium text-lg md:text-xl ">
+                    <div className="inline-flex h-12 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-3  font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50">
+  {role}
+  <img
+                src={mem}
+                alt={`${name} avatar`}
+                className="ml-2 w-9 h-10 "
+              />
+</div>
+                   </div>
               </div>
 
               <div className="flex items-center gap-3">
