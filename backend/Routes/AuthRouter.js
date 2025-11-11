@@ -1,11 +1,12 @@
-// Routes/AuthRouter.js
+// backend/Routes/AuthRouter.js
 const express = require('express');
 const router = express.Router();
 
 try {
-  const { signup, login } = require('../Controllers/AuthController');
+  const { signup, login, checkMember } = require('../Controllers/AuthController');
   const { signupValidation, loginValidation } = require('../Middlewares/AuthValidation');
 
+  router.get('/check-member', checkMember); // <-- membership probe (email &/or rollnumber)
   router.post('/login', loginValidation, login);
   router.post('/signup', signupValidation, signup);
 
