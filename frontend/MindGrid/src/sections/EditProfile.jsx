@@ -3,10 +3,22 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import InputSpotlightBorder from '../constants/InputSpotlightBorder'
 
-// ✅ Use environment variable (VITE_API_URL)
+// Vite env (set VITE_API_URL in your frontend .env or Vercel env)
 const API_BASE = import.meta.env.VITE_API_URL || 'https://mindgrid-backend.vercel.app'
 
-const EditProfile = () => {
+/**
+ * Helper: safely parse JSON response or return text for debugging
+ */
+async function parseResponseBody(res) {
+  const ct = res.headers.get('content-type') || ''
+  if (ct.includes('application/json')) {
+    return await res.json()
+  }
+  // return text fallback (helpful when server returns HTML error page)
+  return await res.text().catch(() => '')
+}
+
+export default function EditProfile() {
   const [form, setForm] = useState({
     name: '',
     title: '',
@@ -21,10 +33,14 @@ const EditProfile = () => {
 
   const [profilePicFile, setProfilePicFile] = useState(null)
   const [profilePicPreview, setProfilePicPreview] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  // ✅ Load logged-in user's profile on mount
+  // Load profile on mount
   useEffect(() => {
+    let cancelled = false
+
     const loadProfile = async () => {
+      setLoading(true)
       try {
         const token = localStorage.getItem('token')
         const res = await fetch(`${API_BASE}/api/profile`, {
@@ -35,79 +51,117 @@ const EditProfile = () => {
           },
         })
 
-        if (!res.ok) throw new Error(`Failed to load profile: ${res.status}`)
-        const data = await res.json()
+        if (!res.ok) {
+          const body = await parseResponseBody(res)
+          throw new Error(`Failed to load profile (${res.status}): ${String(body).slice(0, 300)}`)
+        }
 
-        const safe = (v) => (v ? String(v) : '')
-        setForm({
-          name: safe(data.name),
-          title: safe(data.title),
-          resumeLink: safe(data.resumeLink),
-          role: safe(data.role),
-          section: safe(data.section),
-          bio: safe(data.bio),
-          skills: Array.isArray(data.skills) ? data.skills.join(', ') : safe(data.skills),
-          github: safe(data.github),
-          linkedin: safe(data.linkedin),
-        })
-        if (data.profilePicUrl) setProfilePicPreview(data.profilePicUrl)
+        const data = await parseResponseBody(res)
+
+        if (!cancelled) {
+          const safe = (v) => (v === null || typeof v === 'undefined' ? '' : String(v))
+          setForm({
+            name: safe(data.name),
+            title: safe(data.title),
+            resumeLink: safe(data.resumeLink || data.resume || ''),
+            role: safe(data.role),
+            section: safe(data.section),
+            bio: safe(data.bio),
+            skills: Array.isArray(data.skills) ? data.skills.join(', ') : safe(data.skills),
+            github: safe(data.github),
+            linkedin: safe(data.linkedin),
+          })
+          if (data.profilePicUrl) setProfilePicPreview(data.profilePicUrl)
+        }
       } catch (err) {
         console.error('Error loading profile:', err)
-        toast.error('Failed to load your profile.')
+        if (!cancelled) toast.error('Failed to load profile. Check console for details.')
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
 
     loadProfile()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  // ✅ Input change handler
+  // handle text inputs
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  // ✅ File upload preview
+  // file selection (preview only locally)
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files?.[0] || null
     if (file) {
       setProfilePicFile(file)
-      setProfilePicPreview(URL.createObjectURL(file))
+      try {
+        setProfilePicPreview(URL.createObjectURL(file))
+      } catch {
+        setProfilePicPreview(null)
+      }
+    } else {
+      setProfilePicFile(null)
+      setProfilePicPreview(null)
     }
   }
 
-  // ✅ Submit updates
+  // submit updated profile (JSON only: no multipart on serverless)
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const token = localStorage.getItem('token')
+    // If a file is selected: currently serverless hotfix rejects multipart.
+    if (profilePicFile) {
+      toast.error('Profile picture uploads are temporarily disabled. Remove the picture or enable S3 uploads on backend.')
+      return
+    }
 
+    const token = localStorage.getItem('token')
     try {
-      const formData = new FormData()
-      Object.entries(form).forEach(([key, value]) => formData.append(key, value))
-      if (profilePicFile) formData.append('profilePic', profilePicFile)
+      setLoading(true)
+      // prepare payload: convert skills string to array if helpful
+      const payload = { ...form }
+      // if you prefer to send skills as array uncomment this:
+      // payload.skills = typeof form.skills === 'string' ? form.skills.split(',').map(s=>s.trim()).filter(Boolean) : form.skills
 
       const res = await fetch(`${API_BASE}/api/profile`, {
         method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: formData,
+        body: JSON.stringify(payload),
       })
 
-      if (!res.ok) throw new Error(`Failed to update profile (${res.status})`)
+      if (!res.ok) {
+        const body = await parseResponseBody(res)
+        console.error('Update failed:', res.status, body)
+        const message = (body && (body.message || body.error)) || `Failed to update profile (${res.status})`
+        toast.error(String(message).slice(0, 200))
+        return
+      }
 
+      const data = await parseResponseBody(res).catch(() => ({}))
       toast.success('Profile updated successfully!')
+      // Optionally use returned data to open profile page immediately with state
       setTimeout(() => {
-        window.location.href = '/profile'
-      }, 1000)
+        // if backend returned _id, navigate to /profile/:id (your router may differ)
+        const userId = data && (data._id || data.id)
+        if (userId) window.location.href = `/profile/${userId}`
+        else window.location.href = '/profile'
+      }, 700)
     } catch (err) {
       console.error('Error updating profile:', err)
-      toast.error('Error updating profile.')
+      toast.error('Error updating profile. See console for details.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center py-12 px-4 overflow-hidden">
-      {/* Background Pattern */}
       <div className="absolute inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
 
       <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden w-[90%]">
@@ -123,40 +177,26 @@ const EditProfile = () => {
         <div className="w-full md:w-[90%] mx-auto rounded-2xl sm:mt-12 mb-12 p-8 relative z-10 bg-slate-700/40 backdrop-blur-md shadow-xl">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Each field with InputSpotlightBorder */}
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Name</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'name', value: form.name, onChange: handleChange }}
-                  placeholder="Enter your name"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'name', value: form.name, onChange: handleChange }} placeholder="Enter your name" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Title</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'title', value: form.title, onChange: handleChange }}
-                  placeholder="Enter your title"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'title', value: form.title, onChange: handleChange }} placeholder="Enter your title" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Role</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'role', value: form.role, onChange: handleChange }}
-                  placeholder="Enter your role"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'role', value: form.role, onChange: handleChange }} placeholder="Enter your role" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Section</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'section', value: form.section, onChange: handleChange }}
-                  placeholder="Enter your section"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'section', value: form.section, onChange: handleChange }} placeholder="Enter your section" />
               </div>
 
-              {/* Bio */}
               <div className="md:col-span-2">
                 <label className="text-slate-300 text-base font-medium mb-2 block">Bio</label>
                 <textarea
@@ -170,50 +210,41 @@ const EditProfile = () => {
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Resume Link</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'resumeLink', value: form.resumeLink, onChange: handleChange }}
-                  placeholder="Paste your resume link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'resumeLink', value: form.resumeLink, onChange: handleChange }} placeholder="Paste your resume link" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Skills</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'skills', value: form.skills, onChange: handleChange }}
-                  placeholder="e.g. React, Node, CSS"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'skills', value: form.skills, onChange: handleChange }} placeholder="e.g. React, Node, CSS" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">GitHub</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'github', value: form.github, onChange: handleChange }}
-                  placeholder="GitHub profile link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'github', value: form.github, onChange: handleChange }} placeholder="GitHub profile link" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">LinkedIn</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'linkedin', value: form.linkedin, onChange: handleChange }}
-                  placeholder="LinkedIn profile link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'linkedin', value: form.linkedin, onChange: handleChange }} placeholder="LinkedIn profile link" />
               </div>
 
               <div className="md:col-span-2">
                 <label className="text-slate-300 text-base font-medium mb-2 block">Profile Picture</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="text-slate-300 text-sm"
-                />
+                <input type="file" accept="image/*" onChange={handleFileChange} className="text-slate-300 text-sm" />
                 {profilePicPreview && (
-                  <img
-                    src={profilePicPreview}
-                    alt="preview"
-                    className="mt-3 w-28 h-28 object-cover rounded-full border border-gray-400"
-                  />
+                  <div className="mt-3 flex items-center gap-4">
+                    <img src={profilePicPreview} alt="preview" className="w-28 h-28 object-cover rounded-full border border-gray-400" />
+                    <div>
+                      <div className="text-sm text-gray-300">Uploads are disabled on current backend.</div>
+                      <button
+                        type="button"
+                        onClick={() => { setProfilePicFile(null); setProfilePicPreview(null) }}
+                        className="mt-2 inline-block bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded"
+                      >
+                        Remove picture
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -221,17 +252,17 @@ const EditProfile = () => {
             <div className="mt-8 flex justify-center">
               <button
                 type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg"
+                disabled={!!profilePicFile || loading}
+                className={`bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg ${ (profilePicFile || loading) ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
-                Save Changes
+                {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>
+
           <ToastContainer position="bottom-right" />
         </div>
       </div>
     </section>
   )
 }
-
-export default EditProfile
