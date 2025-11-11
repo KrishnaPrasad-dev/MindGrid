@@ -43,6 +43,7 @@ const Profile = (props) => {
     name: props.name || 'J Krishna Prasad',
     title: props.title || 'Python developer',
     role: props.role || 'Club Member',
+    section: props.section || '', // ← added section to initial state
     bio:
       props.bio ||
       `I am from GuruNanak Univeristy.`,
@@ -82,6 +83,7 @@ const Profile = (props) => {
             name: st.name || prev.name,
             title: st.title || prev.title,
             role: st.role || prev.role,
+            section: st.section || prev.section, // ← sync section from stateUser
             bio: st.bio || prev.bio,
             avatarUrl: st.avatarUrl || st.profilePic || prev.avatarUrl,
             skills: st.skills?.length ? st.skills : prev.skills,
@@ -124,6 +126,7 @@ const Profile = (props) => {
             name: got.name || prev.name,
             title: got.title || prev.title,
             role: got.role || prev.role,
+            section: got.section || prev.section, // ← sync section from server response
             bio: got.bio || prev.bio,
             avatarUrl: got.avatarUrl || got.profilePic || prev.avatarUrl,
             skills: got.skills?.length ? got.skills : prev.skills,
@@ -184,7 +187,10 @@ const Profile = (props) => {
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">
             <div className="relative">
               <img src={user.avatarUrl || pfpFallback} alt={`${user.name} avatar`} className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-indigo-500/40 shadow-lg" />
-              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/70 px-4 py-2 rounded-full text-md text-gray-200">CSE</span>
+              {/* show user's section (updated from edit form or server) */}
+              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/70 px-4 py-2 rounded-full text-md text-gray-200">
+                {user.section || '—'}
+              </span>
             </div>
           </div>
 
