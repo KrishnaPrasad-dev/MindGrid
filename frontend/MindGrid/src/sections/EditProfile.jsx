@@ -1,9 +1,26 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import InputSpotlightBorder from '../constants/InputSpotlightBorder'
 
+/** Parse JWT payload (no external lib) */
+const parseJwt = (token) => {
+  try {
+    if (!token) return null
+    const payload = token.split('.')[1]
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+    // decodeURIComponent(escape(...)) for unicode safety (old trick)
+    // but keep it simple:
+    return JSON.parse(decodeURIComponent(escape(decoded)))
+  } catch (e) {
+    return null
+  }
+}
+
 const EditProfile = () => {
+  const navigate = useNavigate()
+
   const [form, setForm] = useState({
     name: '',
     title: '',
@@ -37,15 +54,17 @@ const EditProfile = () => {
         setForm({
           name: safe(data.name),
           title: safe(data.title),
-          resumeLink: safe(data.resumeLink),
+          resumeLink: safe(data.resumeLink || data.resume || data.resume_url),
           role: safe(data.role),
           section: safe(data.section),
           bio: safe(data.bio),
           skills: Array.isArray(data.skills) ? data.skills.join(', ') : safe(data.skills),
-          github: safe(data.github),
-          linkedin: safe(data.linkedin),
+          github: safe(data.github || data.githubUrl),
+          linkedin: safe(data.linkedin || data.linkedinUrl),
         })
-        if (data.profilePicUrl) setProfilePicPreview(data.profilePicUrl)
+        if (data.profilePicUrl || data.profilePic || data.avatar) {
+          setProfilePicPreview(data.profilePicUrl || data.profilePic || data.avatar)
+        }
       } catch (err) {
         console.error('Error loading profile:', err)
       }
@@ -59,10 +78,14 @@ const EditProfile = () => {
   }
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files?.[0]
     if (file) {
       setProfilePicFile(file)
-      setProfilePicPreview(URL.createObjectURL(file))
+      try {
+        setProfilePicPreview(URL.createObjectURL(file))
+      } catch {
+        setProfilePicPreview(null)
+      }
     }
   }
 
@@ -72,7 +95,9 @@ const EditProfile = () => {
 
     try {
       const formData = new FormData()
-      Object.entries(form).forEach(([key, value]) => formData.append(key, value))
+      Object.entries(form).forEach(([key, value]) => {
+        formData.append(key, value === undefined || value === null ? '' : value)
+      })
       if (profilePicFile) formData.append('profilePic', profilePicFile)
 
       const res = await fetch('/api/profile', {
@@ -83,13 +108,34 @@ const EditProfile = () => {
         body: formData,
       })
 
-      if (!res.ok) throw new Error('Failed to update profile')
+      if (!res.ok) {
+        const txt = await res.text().catch(() => '')
+        throw new Error(txt || `Failed to update profile (${res.status})`)
+      }
+
+      // Try to parse returned updated user object
+      let data = {}
+      try {
+        data = await res.json()
+      } catch (err) {
+        data = {}
+      }
+
+      // derive userId: prefer returned object, otherwise JWT fallback
+      const userId = data._id || data.id || (parseJwt(token) && (parseJwt(token)._id || parseJwt(token).id))
 
       toast.success('Profile updated successfully!')
-      window.location.href = '/profile'
+
+      if (userId) {
+        // navigate and pass updated user to profile page via state to show instantly
+        navigate(`/profile/${userId}`, { state: { user: data } })
+      } else {
+        // fallback to generic profile route
+        window.location.href = '/profile'
+      }
     } catch (err) {
       console.error('Error updating profile:', err)
-      toast.error('Error updating profile')
+      toast.error('Error updating profile — check console for details')
     }
   }
 
@@ -110,106 +156,66 @@ const EditProfile = () => {
         <div className="w-full md:w-[90%] mx-auto rounded-2xl sm:mt-12 mb-12 p-8 relative z-10 bg-slate-700/40 backdrop-blur-md shadow-xl">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Name</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'name', value: form.name, onChange: handleChange }}
-                  placeholder="Enter your name"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'name', value: form.name, onChange: handleChange }} placeholder="Enter your name" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Title</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'title', value: form.title, onChange: handleChange }}
-                  placeholder="Enter your title"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'title', value: form.title, onChange: handleChange }} placeholder="Enter your title" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Role</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'role', value: form.role, onChange: handleChange }}
-                  placeholder="Enter your role"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'role', value: form.role, onChange: handleChange }} placeholder="Enter your role" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Section</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'section', value: form.section, onChange: handleChange }}
-                  placeholder="Enter your section"
+                <InputSpotlightBorder inputProps={{ name: 'section', value: form.section, onChange: handleChange }} placeholder="Enter your section" />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-slate-300 text-base font-medium mb-2 block">Bio</label>
+                <textarea
+                  name="bio"
+                  value={form.bio}
+                  onChange={handleChange}
+                  placeholder="Write something about you"
+                  className="w-full rounded-md border border-gray-800 bg-gray-950 px-4 py-3 text-gray-100 placeholder-gray-500 outline-none focus:border-[#8678F9] transition-colors duration-300 h-32 resize-none"
                 />
               </div>
 
-             <div className="md:col-span-2">
-  <label className="text-slate-300 text-base font-medium mb-2 block">Bio</label>
-  <textarea
-    name="bio"
-    value={form.bio}
-    onChange={handleChange}
-    placeholder="Write something about you"
-    className="w-full rounded-md border border-gray-800 bg-gray-950 px-4 py-3 text-gray-100 placeholder-gray-500 outline-none focus:border-[#8678F9] transition-colors duration-300 h-32 resize-none"
-  />
-</div>
-
-
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Resume Link</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'resumeLink', value: form.resumeLink, onChange: handleChange }}
-                  placeholder="Paste your resume link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'resumeLink', value: form.resumeLink, onChange: handleChange }} placeholder="Paste your resume link" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">Skills</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'skills', value: form.skills, onChange: handleChange }}
-                  placeholder="e.g. React, Node, CSS"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'skills', value: form.skills, onChange: handleChange }} placeholder="e.g. React, Node, CSS" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">GitHub</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'github', value: form.github, onChange: handleChange }}
-                  placeholder="GitHub profile link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'github', value: form.github, onChange: handleChange }} placeholder="GitHub profile link" />
               </div>
 
               <div>
                 <label className="text-slate-300 text-base font-medium mb-2 block">LinkedIn</label>
-                <InputSpotlightBorder
-                  inputProps={{ name: 'linkedin', value: form.linkedin, onChange: handleChange }}
-                  placeholder="LinkedIn profile link"
-                />
+                <InputSpotlightBorder inputProps={{ name: 'linkedin', value: form.linkedin, onChange: handleChange }} placeholder="LinkedIn profile link" />
               </div>
 
               <div className="md:col-span-2">
                 <label className="text-slate-300 text-base font-medium mb-2 block">Profile Picture</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="text-slate-300 text-sm"
-                />
-                {profilePicPreview && (
-                  <img
-                    src={profilePicPreview}
-                    alt="preview"
-                    className="mt-3 w-28 h-28 object-cover rounded-full border border-gray-400"
-                  />
-                )}
+                <input type="file" accept="image/*" onChange={handleFileChange} className="text-slate-300 text-sm" />
+                {profilePicPreview && <img src={profilePicPreview} alt="preview" className="mt-3 w-28 h-28 object-cover rounded-full border border-gray-400" />}
               </div>
             </div>
 
             <div className="mt-8 flex justify-center">
-              <button
-                type="submit"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg"
-              >
+              <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg">
                 Save Changes
               </button>
             </div>
