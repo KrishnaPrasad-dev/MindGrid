@@ -1,10 +1,9 @@
-// backend/Routes/MembersRouter.js
+// Routes/MembersRouter.js
 const express = require('express');
 const router = express.Router();
-const UserModel = require('../Models/User'); // adjust path if needed
+const UserModel = require('../Models/User');
 
 // GET /members
-// public: returns list of members (exclude password)
 router.get('/', async (req, res) => {
   try {
     const members = await UserModel.find({}, '-password -__v').lean();
@@ -16,11 +15,9 @@ router.get('/', async (req, res) => {
 });
 
 // GET /members/:id
-// public: return single member by id (exclude password)
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    // Validate simple length to avoid expensive DB errors (optional)
     if (!id || id.length < 6) {
       return res.status(400).json({ success: false, message: 'Invalid id' });
     }
