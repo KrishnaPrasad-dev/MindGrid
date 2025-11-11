@@ -41,13 +41,13 @@ const Profile = (props) => {
   const [error, setError] = useState(null)
   const [user, setUser] = useState({
     name: props.name || 'J Krishna Prasad',
-    title: props.title || 'Full Stack Web Developer',
+    title: props.title || 'Python developer',
     role: props.role || 'Club Member',
     bio:
       props.bio ||
-      `I am from GuruNanak Univeristy. I have a deep love for coding, and it drives me to constantly learn, create, and solve problems.`,
+      `I am from GuruNanak Univeristy.`,
     avatarUrl: props.avatarUrl || '',
-    skills: props.skills || ['Javascript', 'React', 'Node.js', 'MongoDB', 'Express', 'Html', 'CSS', 'Postman', 'Tailwind CSS'],
+    skills: props.skills || ['Python'],
     resumeUrl: props.resumeUrl || '',
     githuburl: props.githuburl || '',
     linkedinurl: props.linkedinurl || '',
