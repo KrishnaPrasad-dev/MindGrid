@@ -74,7 +74,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center py-3  c-space">
           <a
-            href="/"
+            href="/hero"
             className="text-neutral-400 font-bold hover:text-white transition-colors inline-flex animate-text-gradient bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-xl text-transparent "
           >
             MindGrid
