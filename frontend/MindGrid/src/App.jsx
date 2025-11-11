@@ -8,6 +8,7 @@ import Signup from './sections/Signup';
 import Login from './sections/Login';
 import 'react-toastify/ReactToastify.css';
 import Profile from './sections/Profile';
+import EditProfile from './sections/EditProfile';
 
 const App = () => {
   return (
@@ -25,7 +26,7 @@ const App = () => {
         <Route path="/profile/:id" element={<Profile />} />
 
         {/* optional edit profile page */}
-        <Route path="/editprofile" element={<Profile isEditing={true} />} />
+        <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
     </main>
   );
