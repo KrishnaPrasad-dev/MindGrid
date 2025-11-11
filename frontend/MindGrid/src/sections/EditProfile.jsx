@@ -6,15 +6,12 @@ import InputSpotlightBorder from '../constants/InputSpotlightBorder'
 // Vite env (set VITE_API_URL in your frontend .env or Vercel env)
 const API_BASE = import.meta.env.VITE_API_URL || 'https://mindgrid-backend.vercel.app'
 
-/**
- * Helper: safely parse JSON response or return text for debugging
- */
+// helper: safely parse JSON response or return text for debugging
 async function parseResponseBody(res) {
   const ct = res.headers.get('content-type') || ''
   if (ct.includes('application/json')) {
     return await res.json()
   }
-  // return text fallback (helpful when server returns HTML error page)
   return await res.text().catch(() => '')
 }
 
@@ -31,8 +28,6 @@ export default function EditProfile() {
     linkedin: '',
   })
 
-  const [profilePicFile, setProfilePicFile] = useState(null)
-  const [profilePicPreview, setProfilePicPreview] = useState(null)
   const [loading, setLoading] = useState(false)
 
   // Load profile on mount
@@ -71,7 +66,6 @@ export default function EditProfile() {
             github: safe(data.github),
             linkedin: safe(data.linkedin),
           })
-          if (data.profilePicUrl) setProfilePicPreview(data.profilePicUrl)
         }
       } catch (err) {
         console.error('Error loading profile:', err)
@@ -93,38 +87,14 @@ export default function EditProfile() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  // file selection (preview only locally)
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0] || null
-    if (file) {
-      setProfilePicFile(file)
-      try {
-        setProfilePicPreview(URL.createObjectURL(file))
-      } catch {
-        setProfilePicPreview(null)
-      }
-    } else {
-      setProfilePicFile(null)
-      setProfilePicPreview(null)
-    }
-  }
-
-  // submit updated profile (JSON only: no multipart on serverless)
+  // submit updated profile (JSON only)
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // If a file is selected: currently serverless hotfix rejects multipart.
-    if (profilePicFile) {
-      toast.error('Profile picture uploads are temporarily disabled. Remove the picture or enable S3 uploads on backend.')
-      return
-    }
 
     const token = localStorage.getItem('token')
     try {
       setLoading(true)
-      // prepare payload: convert skills string to array if helpful
       const payload = { ...form }
-      // if you prefer to send skills as array uncomment this:
-      // payload.skills = typeof form.skills === 'string' ? form.skills.split(',').map(s=>s.trim()).filter(Boolean) : form.skills
 
       const res = await fetch(`${API_BASE}/api/profile`, {
         method: 'PUT',
@@ -145,9 +115,7 @@ export default function EditProfile() {
 
       const data = await parseResponseBody(res).catch(() => ({}))
       toast.success('Profile updated successfully!')
-      // Optionally use returned data to open profile page immediately with state
       setTimeout(() => {
-        // if backend returned _id, navigate to /profile/:id (your router may differ)
         const userId = data && (data._id || data.id)
         if (userId) window.location.href = `/profile/${userId}`
         else window.location.href = '/profile'
@@ -227,33 +195,13 @@ export default function EditProfile() {
                 <label className="text-slate-300 text-base font-medium mb-2 block">LinkedIn</label>
                 <InputSpotlightBorder inputProps={{ name: 'linkedin', value: form.linkedin, onChange: handleChange }} placeholder="LinkedIn profile link" />
               </div>
-
-              <div className="md:col-span-2">
-                <label className="text-slate-300 text-base font-medium mb-2 block">Profile Picture</label>
-                <input type="file" accept="image/*" onChange={handleFileChange} className="text-slate-300 text-sm" />
-                {profilePicPreview && (
-                  <div className="mt-3 flex items-center gap-4">
-                    <img src={profilePicPreview} alt="preview" className="w-28 h-28 object-cover rounded-full border border-gray-400" />
-                    <div>
-                      <div className="text-sm text-gray-300">Uploads are disabled on current backend.</div>
-                      <button
-                        type="button"
-                        onClick={() => { setProfilePicFile(null); setProfilePicPreview(null) }}
-                        className="mt-2 inline-block bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded"
-                      >
-                        Remove picture
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
 
             <div className="mt-8 flex justify-center">
               <button
                 type="submit"
-                disabled={!!profilePicFile || loading}
-                className={`bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg ${ (profilePicFile || loading) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                disabled={loading}
+                className={`bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3 rounded-lg text-lg ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
