@@ -10,7 +10,7 @@ const Explore = () => {
       <Navbar />
 
       {/* Title */}
-      <div className='flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-6xl text-transparent sm:text-7xl  sm:mt-24 mt-[-60px] items-center justify-center relative mx-auto text-center mb-8'>
+      <div className='flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-4xl text-transparent lg:text-7xl lg:mt-24 mt-32  items-center justify-center relative mx-auto text-center mb-8'>
         Explore Page
       </div>
 
@@ -46,7 +46,7 @@ const Explore = () => {
                   <div className='flex justify-center items-center'>
                   <div className="mt-6 flex  justify-center sm:justify-start">
                     <Link to="/clubmembers" className="relative inline-block">
-                      <span className="relative px-20 py-3 font-semibold text-white rounded-lg group inline-flex">
+                      <span className="relative px-12 lg:px-20 py-3 font-semibold text-white rounded-lg group inline-flex">
                         <span className="absolute inset-0 w-full h-full transition duration-300 transform -translate-x-1 -translate-y-1 bg-purple-800 opacity-80 group-hover:translate-x-0 group-hover:translate-y-0 rounded-lg"></span>
                         <span className="absolute inset-0 w-full h-full transition duration-300 transform translate-x-1 translate-y-1 bg-pink-800 opacity-80 group-hover:translate-x-0 group-hover:translate-y-0 mix-blend-screen rounded-lg"></span>
                         <span className="relative">View  Members</span>
