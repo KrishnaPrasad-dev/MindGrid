@@ -69,7 +69,7 @@ const Hero = () => {
     </span>
    <span className="relative text-black font-bold lg:text-3xl text-xl  inline-flex items-center">
   Explore
-  <img className="h-5 w-5 ml-2" src={arrowblk} alt="arr" />
+  <img className="h-5 w-5 lg:h-7 lg:w-7 ml-2" src={arrowblk} alt="arr" />
 </span>
   </Link>
 
