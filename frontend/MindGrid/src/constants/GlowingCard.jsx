@@ -1,5 +1,5 @@
 import React from 'react';
-import clubpic from '../assets/clubimg.jpg'
+import clubpic from '../assets/clubvivid.jpg'
 
 const GlowingCard = ({ title, description }) => {
   return (
