@@ -21,10 +21,10 @@ const Hero = () => {
   const sizes = calculateSizes(isSmall, isMobile, isTablet);
 
   return (
-    <section className="min-h-screen w-full flex flex-col relative overflow-hidden bg-black" id="home">
+    <section className=" w-full flex flex-col relative overflow-hidden bg-black" id="home">
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:14px_24px]" />
-        <div className="absolute left-1/2 top-[-10%] h-[1000px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#ffffff10,#000000)]" />
+        <div className="absolute left-1/2 top-[-10%] h-[1000px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#ffffff20,#000000)]" />
       </div>
 
       <div className="relative z-10 w-full mx-auto flex flex-col sm:mt-36 mt-20 c-space gap-3">
@@ -75,12 +75,16 @@ const Hero = () => {
 
 
 </div>
-    
+
+<div className='flex relative items-center justify-center'>
+        
   <GlowingCard 
   className="relative "
   title="MindGrid Club" 
   description="These are our club members." 
 />
+</div>
+  
     </section>
   );
 };
