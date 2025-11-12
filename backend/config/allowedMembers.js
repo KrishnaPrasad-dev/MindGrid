@@ -13,5 +13,8 @@ module.exports = [
   "gnu24et102408@gnuindia.org",
   "gnu24et102141@gnuindia.org",
   "gnu24et102188@gnuindia.org",
+  "gnu24et102367@gnuindia.org",
+  "gnu24et102393@gnuindia.org"
+
   
 ];
