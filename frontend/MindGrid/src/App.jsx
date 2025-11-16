@@ -1,66 +1,51 @@
-import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Navbar from './sections/Navbar';
-import Hero from './sections/Hero';
-import Explore from './sections/Explore';
-import Clubmembers from './sections/Clubmembers';
-import Signup from './sections/Signup';
-import Login from './sections/Login';
-import 'react-toastify/ReactToastify.css';
-import Profile from './sections/Profile';
-import EditProfile from './sections/EditProfile';
+const App = () => {
+  // --- auth restore state (minimal, stays inside this file)
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
-/** small helper: parse JWT payload without extra libs */
-const parseJwt = (token) => {
-  try {
-    if (!token) return null;
-    const payload = token.split('.')[1];
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decodeURIComponent(escape(decoded)));
-  } catch {
-    return null;
-  }
-};
-
-/** Component for /profile route to redirect to /profile/:id */
-const MyProfileRedirect = () => {
-  const navigate = useNavigate();
   React.useEffect(() => {
-    const token =
-      typeof window !== 'undefined'
+    try {
+      const stored = typeof window !== 'undefined'
         ? localStorage.getItem('token') || localStorage.getItem('jwtToken') || ''
         : '';
-    const payload = parseJwt(token);
-    const userId = payload?._id || payload?.id || payload?.userId || null;
-    if (userId) {
-      navigate(`/profile/${userId}`, { replace: true });
-    } else {
-      navigate('/login', { replace: true });
+      if (stored) {
+        const payload = parseJwt(stored);
+        setUser(payload || null);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.warn('Auth restore failed', err);
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
-  }, [navigate]);
+  }, []);
 
-  return null; // nothing to render, just redirect
-};
+  // Helper used for root path decision
+  function RootRedirect() {
+    if (loading) return <div style={{padding:20}}>Loading...</div>;
+    return user ? <Navigate to="/hero" replace /> : <Navigate to="/login" replace />;
+  }
 
-const App = () => {
   return (
     <main>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        {/* ← replace this unconditional redirect with RootRedirect */}
+        <Route path="/" element={<RootRedirect />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/hero" element={<Hero />} />
+
+        {/* if you want these pages protected, you can keep them as-is or 
+            later wrap with a simple check using `user` */}
         <Route path="/explore" element={<Explore />} />
         <Route path="/clubmembers" element={<Clubmembers />} />
 
-        {/* Route that redirects the logged-in user to their profile */}
         <Route path="/profile" element={<MyProfileRedirect />} />
-
-        {/* dynamic route for viewing a profile by id */}
         <Route path="/profile/:id" element={<Profile />} />
-
-        {/* optional edit profile page */}
         <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
     </main>

@@ -1,3 +1,4 @@
+// src/sections/Navbar.jsx
 import { useEffect, useState } from 'react';
 import brainImg from '../assets/brainrababu.gif';
 import cls from '../assets/closemenu.png';
@@ -43,10 +44,11 @@ const Navbar = () => {
 
   const handleLogout = (e) => {
     localStorage.removeItem('token');
+    localStorage.removeItem('jwtToken');
     localStorage.removeItem('loggedInUser');
     // immediate UI update
     setLoggedInUser('');
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   // Navigate to logged-in user's profile using JWT
@@ -61,7 +63,7 @@ const Navbar = () => {
       navigate(`/profile/${userId}`);
     } else {
       // not logged in or invalid token
-      navigate('/login');
+      navigate('/login', { replace: true });
     }
   };
 
@@ -73,13 +75,14 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-black ">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center py-3  c-space">
-          <a
-            href="/hero"
+          {/* Use Link instead of anchor to avoid full reloads */}
+          <Link
+            to="/hero"
             className="text-neutral-400 font-bold hover:text-white transition-colors inline-flex animate-text-gradient bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-xl text-transparent "
           >
             MindGrid
             <img src={brainImg} className="h-7 w-7 sm:h-7 sm:w-7" alt="Brain" />
-          </a>
+          </Link>
 
           <button
             onClick={toggleMenu}
