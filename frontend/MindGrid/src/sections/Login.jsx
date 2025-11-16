@@ -1,4 +1,3 @@
-// src/sections/Login.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Example from '../constants/EncryptButton';
@@ -35,12 +34,27 @@ const Login = () => {
     try {
       const url = `${API_URL}/auth/login`;
 
+      // optional: measure timings (comment out if not needed)
+      const start = performance.now();
+
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginInfo),
       });
+
+      const fetchDone = performance.now();
       const result = await response.json();
+      const jsonDone = performance.now();
+      console.log(
+        'login timings (ms): fetch:',
+        (fetchDone - start).toFixed(1),
+        'json:',
+        (jsonDone - fetchDone).toFixed(1),
+        'total:',
+        (jsonDone - start).toFixed(1)
+      );
+
       const { success, message, jwtToken, name, error } = result;
 
       if (success && jwtToken) {
@@ -48,12 +62,16 @@ const Login = () => {
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('jwtToken', jwtToken); // set both keys for safety
         localStorage.setItem('loggedInUser', name || '');
+
+        // 🔔 notify the app that auth state changed (so App.jsx updates immediately)
+        window.dispatchEvent(new Event('auth-change'));
+
         handleSuccess(message || 'Login successful');
-        // navigate immediately to root; App.jsx will redirect to the correct home route
+        // navigate immediately to root; App.jsx will see the auth-change and update
         navigate('/', { replace: true });
+        return;
       } else if (error) {
-        const details =
-          error?.details?.[0]?.message || error?.message || 'Login failed';
+        const details = error?.details?.[0]?.message || error?.message || 'Login failed';
         handleError(details);
       } else {
         handleError(message || 'Login failed');

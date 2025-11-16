@@ -1,10 +1,9 @@
-// src/sections/Navbar.jsx
+import React from 'react';
 import { useEffect, useState } from 'react';
 import brainImg from '../assets/brainrababu.gif';
 import cls from '../assets/closemenu.png';
 import menuuu from '../assets/menuham.png';
 import { navLinks } from '../constants/index.js';
-import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 const NavItems = ({ onClick = () => {} }) => (

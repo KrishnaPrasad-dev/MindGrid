@@ -52,6 +52,7 @@ const App = () => {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
+  // initial restore on mount
   React.useEffect(() => {
     try {
       const stored =
@@ -73,9 +74,40 @@ const App = () => {
     }
   }, []);
 
+  // listen for auth changes from same window (custom event) or other windows (storage event)
+  React.useEffect(() => {
+    const handler = () => {
+      try {
+        const stored =
+          typeof window !== 'undefined'
+            ? localStorage.getItem('token') || localStorage.getItem('jwtToken') || ''
+            : '';
+
+        if (stored) {
+          setUser(parseJwt(stored) || null);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        console.warn('Auth update failed:', err);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    window.addEventListener('auth-change', handler);
+    window.addEventListener('storage', handler);
+
+    return () => {
+      window.removeEventListener('auth-change', handler);
+      window.removeEventListener('storage', handler);
+    };
+  }, []);
+
   /** Root redirect: wait until loading is done */
   const RootRedirect = () => {
-    if (loading) return <div style={{ padding: 20, color: "white" }}>Loading...</div>;
+    if (loading) return <div style={{ padding: 20, color: 'white' }}>Loading...</div>;
     return user ? <Navigate to="/hero" replace /> : <Navigate to="/login" replace />;
   };
 
@@ -84,7 +116,7 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        {/* FIXED ROOT ROUTE (No more forcing /login always) */}
+        {/* root route now waits for auth */}
         <Route path="/" element={<RootRedirect />} />
 
         <Route path="/login" element={<Login />} />
