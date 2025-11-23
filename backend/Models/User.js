@@ -11,7 +11,8 @@ const UserSchema = new Schema({
 
   // Optional profile fields (added)
   title: { type: String, default: '' },
-  resumeLink: { type: String, default: '' },
+  resumeLink: { type: String, default: '' },        // raw user-provided link
+  resumeDirectLink: { type: String, default: '' },  // sanitized / drive-direct link
   section: { type: String, default: '' },
   bio: { type: String, default: '' },
   skills: { type: [String], default: [] },

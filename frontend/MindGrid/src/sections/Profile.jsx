@@ -1,3 +1,4 @@
+// src/pages/Profile.jsx
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import axios from 'axios'
@@ -6,9 +7,6 @@ import mem from '../assets/group.png'
 import pen from '../assets/pen.png'
 import githubIcon from '../assets/github.png'
 import linkedinIcon from '../assets/linkedin.png'
-
-/** LOCAL file uploaded by you (developer note: this path will be transformed to a URL when needed) */
-const LOCAL_RESUME_PATH = '/mnt/data/KRISHNAPRASAD_RESUME.tex'
 
 /** Safely get API base (works in Vite & CRA) */
 const getApiBase = () => {
@@ -50,15 +48,10 @@ const googleDriveDirectLink = (url) => {
 /** Helper: sanitize URL and ensure it becomes absolute */
 const sanitizeUrl = (url) => {
   if (!url) return null
-  // if it's the special local path (developer uploaded .tex), return it as-is so the server/tooling can handle it.
-  if (url === LOCAL_RESUME_PATH) return url
-
   // If it already has a scheme (http(s), ftp, mailto, etc.) return as is
   if (/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) || /^mailto:/.test(url)) return url
-
   // If starts with '//' (protocol-relative), prepend https:
   if (url.startsWith('//')) return `https:${url}`
-
   // Otherwise, treat it as missing scheme and prepend https://
   return `https://${url}`
 }
@@ -80,7 +73,8 @@ const Profile = (props) => {
       `I am from GuruNanak Univeristy.`,
     avatarUrl: props.avatarUrl || '',
     skills: props.skills || ['Python'],
-    resumeUrl: props.resumeUrl || '',
+    resumeLink: props.resumeLink || '',
+    resumeDirectLink: props.resumeDirectLink || '',
     githuburl: props.githuburl || '',
     linkedinurl: props.linkedinurl || '',
   })
@@ -118,7 +112,8 @@ const Profile = (props) => {
             bio: st.bio || prev.bio,
             avatarUrl: st.avatarUrl || st.profilePic || prev.avatarUrl,
             skills: st.skills?.length ? st.skills : prev.skills,
-            resumeUrl: st.resumeUrl || st.resume || prev.resumeUrl,
+            resumeLink: st.resumeLink || st.resume || prev.resumeLink,
+            resumeDirectLink: st.resumeDirectLink || prev.resumeDirectLink || '',
             githuburl: st.githuburl || st.github || prev.githuburl,
             linkedinurl: st.linkedinurl || st.linkedin || prev.linkedinurl,
           }))
@@ -161,7 +156,8 @@ const Profile = (props) => {
             bio: got.bio || prev.bio,
             avatarUrl: got.avatarUrl || got.profilePic || prev.avatarUrl,
             skills: got.skills?.length ? got.skills : prev.skills,
-            resumeUrl: got.resumeUrl || got.resume || prev.resumeUrl,
+            resumeLink: got.resumeLink || got.resume || prev.resumeLink,
+            resumeDirectLink: got.resumeDirectLink || '', // prefer direct if available
             githuburl: got.githuburl || got.github || prev.githuburl,
             linkedinurl: got.linkedinurl || got.linkedin || prev.linkedinurl,
           }))
@@ -196,37 +192,25 @@ const Profile = (props) => {
   const canEdit = loggedInUserId && id && String(loggedInUserId) === String(id)
 
   // Build final resume href:
-  // Priority: user.resumeUrl (from server/state) -> LOCAL_RESUME_PATH (developer uploaded) -> null
-  const rawResumeInput = user.resumeUrl || LOCAL_RESUME_PATH
-  // If it's a Google Drive link, convert to direct download first
-  const maybeDrive = googleDriveDirectLink(rawResumeInput)
-  // Sanitize to ensure absolute URL or pass through local path
-  const resumeHref = sanitizeUrl(maybeDrive)
+  // Priority: resumeDirectLink (from server) -> resumeLink (raw) -> null
+  const raw = user.resumeDirectLink || user.resumeLink || ''
+  // If it's a Drive share link, convert to direct first (if direct wasn't populated server-side)
+  const maybeDrive = googleDriveDirectLink(raw || user.resumeLink || '')
+  const resumeHref = sanitizeUrl(maybeDrive || raw) || null
 
-  // click handler that reliably opens resume in a new tab/window
   const handleResumeClick = (e) => {
     e.preventDefault()
     if (!resumeHref) {
-      // resume not available
-      // optionally show a toast or UI feedback here
-      console.warn('No resume URL available.')
+      // show simple feedback: but avoid introducing extra lib dependencies here
+      alert('No resume uploaded.')
       return
     }
-    // If resumeHref is the local uploaded path, we still attempt to open it.
-    // The developer/tooling can transform this path to an accessible URL on the server side when deploying.
     try {
-      // For browser-safe opening
       window.open(resumeHref, '_blank', 'noopener,noreferrer')
     } catch (err) {
-      // fallback: set location (may navigate away)
       window.location.href = resumeHref
     }
   }
-
-  useEffect(() => {
-    // optional debug: log resolved resume href
-    // console.log('Resolved resumeHref ->', resumeHref)
-  }, [resumeHref])
 
   return (
     <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1 overflow-hidden">
@@ -270,12 +254,10 @@ const Profile = (props) => {
                     <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{user.title}</p>
 
                     <div className="flex items-center mt-4 gap-3">
-                      <a
-                        href={resumeHref || '#'}
+                      <button
                         onClick={handleResumeClick}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-white text-sm shadow-md"
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${resumeHref ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 cursor-not-allowed' } transition text-sm shadow-md`}
+                        aria-disabled={!resumeHref}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -291,8 +273,8 @@ const Profile = (props) => {
                             d="M12 4v12m0 0l4-4m-4 4l-4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6"
                           />
                         </svg>
-                        <span>Resume</span>
-                      </a>
+                        <span>{resumeHref ? 'Resume' : 'No resume uploaded'}</span>
+                      </button>
                     </div>
 
                     <div className="mt-5 inline-flex h-12 items-center justify-center rounded-md font-medium text-white">

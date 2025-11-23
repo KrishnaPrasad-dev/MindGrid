@@ -1,3 +1,4 @@
+// src/pages/EditProfile.jsx
 import React, { useState, useEffect } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -94,7 +95,11 @@ export default function EditProfile() {
     const token = localStorage.getItem('token')
     try {
       setLoading(true)
-      const payload = { ...form }
+      const payload = {
+        ...form,
+        // send skills as array if comma-separated
+        skills: form.skills ? form.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
+      }
 
       const res = await fetch(`${API_BASE}/api/profile`, {
         method: 'PUT',
