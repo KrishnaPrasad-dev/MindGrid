@@ -7,6 +7,9 @@ import pen from '../assets/pen.png'
 import githubIcon from '../assets/github.png'
 import linkedinIcon from '../assets/linkedin.png'
 
+/** LOCAL file uploaded by you (developer note: this path will be transformed to a URL when needed) */
+const LOCAL_RESUME_PATH = '/mnt/data/KRISHNAPRASAD_RESUME.tex'
+
 /** Safely get API base (works in Vite & CRA) */
 const getApiBase = () => {
   try {
@@ -32,6 +35,34 @@ const parseJwt = (token) => {
   }
 }
 
+/** Helper: convert Google Drive share link to direct download/view link */
+const googleDriveDirectLink = (url) => {
+  if (!url) return null
+  // common share URL: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  const fileIdMatch = url.match(/\/d\/([A-Za-z0-9_-]+)/)
+  if (fileIdMatch) return `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
+  // alternative share link that includes id=query param
+  const idParamMatch = url.match(/[?&]id=([A-Za-z0-9_-]+)/)
+  if (idParamMatch) return `https://drive.google.com/uc?export=download&id=${idParamMatch[1]}`
+  return url
+}
+
+/** Helper: sanitize URL and ensure it becomes absolute */
+const sanitizeUrl = (url) => {
+  if (!url) return null
+  // if it's the special local path (developer uploaded .tex), return it as-is so the server/tooling can handle it.
+  if (url === LOCAL_RESUME_PATH) return url
+
+  // If it already has a scheme (http(s), ftp, mailto, etc.) return as is
+  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(url) || /^mailto:/.test(url)) return url
+
+  // If starts with '//' (protocol-relative), prepend https:
+  if (url.startsWith('//')) return `https:${url}`
+
+  // Otherwise, treat it as missing scheme and prepend https://
+  return `https://${url}`
+}
+
 const Profile = (props) => {
   const { id } = useParams()
   const location = useLocation()
@@ -43,7 +74,7 @@ const Profile = (props) => {
     name: props.name || 'J Krishna Prasad',
     title: props.title || 'Python developer',
     role: props.role || 'Club Member',
-    section: props.section || '', // ← added section to initial state
+    section: props.section || '',
     bio:
       props.bio ||
       `I am from GuruNanak Univeristy.`,
@@ -83,7 +114,7 @@ const Profile = (props) => {
             name: st.name || prev.name,
             title: st.title || prev.title,
             role: st.role || prev.role,
-            section: st.section || prev.section, // ← sync section from stateUser
+            section: st.section || prev.section,
             bio: st.bio || prev.bio,
             avatarUrl: st.avatarUrl || st.profilePic || prev.avatarUrl,
             skills: st.skills?.length ? st.skills : prev.skills,
@@ -126,7 +157,7 @@ const Profile = (props) => {
             name: got.name || prev.name,
             title: got.title || prev.title,
             role: got.role || prev.role,
-            section: got.section || prev.section, // ← sync section from server response
+            section: got.section || prev.section,
             bio: got.bio || prev.bio,
             avatarUrl: got.avatarUrl || got.profilePic || prev.avatarUrl,
             skills: got.skills?.length ? got.skills : prev.skills,
@@ -164,6 +195,39 @@ const Profile = (props) => {
   const loggedInUserId = getLoggedInUserId()
   const canEdit = loggedInUserId && id && String(loggedInUserId) === String(id)
 
+  // Build final resume href:
+  // Priority: user.resumeUrl (from server/state) -> LOCAL_RESUME_PATH (developer uploaded) -> null
+  const rawResumeInput = user.resumeUrl || LOCAL_RESUME_PATH
+  // If it's a Google Drive link, convert to direct download first
+  const maybeDrive = googleDriveDirectLink(rawResumeInput)
+  // Sanitize to ensure absolute URL or pass through local path
+  const resumeHref = sanitizeUrl(maybeDrive)
+
+  // click handler that reliably opens resume in a new tab/window
+  const handleResumeClick = (e) => {
+    e.preventDefault()
+    if (!resumeHref) {
+      // resume not available
+      // optionally show a toast or UI feedback here
+      console.warn('No resume URL available.')
+      return
+    }
+    // If resumeHref is the local uploaded path, we still attempt to open it.
+    // The developer/tooling can transform this path to an accessible URL on the server side when deploying.
+    try {
+      // For browser-safe opening
+      window.open(resumeHref, '_blank', 'noopener,noreferrer')
+    } catch (err) {
+      // fallback: set location (may navigate away)
+      window.location.href = resumeHref
+    }
+  }
+
+  useEffect(() => {
+    // optional debug: log resolved resume href
+    // console.log('Resolved resumeHref ->', resumeHref)
+  }, [resumeHref])
+
   return (
     <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1 overflow-hidden">
       <div className="absolute inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
@@ -187,7 +251,6 @@ const Profile = (props) => {
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">
             <div className="relative">
               <img src={user.avatarUrl || pfpFallback} alt={`${user.name} avatar`} className="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-indigo-500/40 shadow-lg" />
-              {/* show user's section (updated from edit form or server) */}
               <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/70 px-4 py-2 rounded-full text-md text-gray-200">
                 {user.section || '—'}
               </span>
@@ -205,31 +268,32 @@ const Profile = (props) => {
                   <div>
                     <h1 className="text-2xl md:text-4xl font-extrabold text-white">{user.name}</h1>
                     <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{user.title}</p>
-<div className="flex items-center mt-4 gap-3">
-  <a
-    href={user.resumeUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-white text-sm shadow-md"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-4 h-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M12 4v12m0 0l4-4m-4 4l-4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6"
-      />
-    </svg>
-    <span>Resume</span>
-  </a>
-</div>
 
+                    <div className="flex items-center mt-4 gap-3">
+                      <a
+                        href={resumeHref || '#'}
+                        onClick={handleResumeClick}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition text-white text-sm shadow-md"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-4 h-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 4v12m0 0l4-4m-4 4l-4-4M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6"
+                          />
+                        </svg>
+                        <span>Resume</span>
+                      </a>
+                    </div>
 
                     <div className="mt-5 inline-flex h-12 items-center justify-center rounded-md font-medium text-white">
                       <button className="inline-flex text-white text-xl h-12 animate-background-shine items-center justify-center rounded-md border border-gray-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50">
