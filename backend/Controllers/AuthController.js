@@ -1,7 +1,8 @@
 // backend/Controllers/AuthController.js
-console.log("✅ AuthRouter imports success");
+console.log("✅ AuthController loaded");
 
 const UserModel = require("../Models/User");
+const { connectToMongoose } = require("../Models/db"); // 🔥 IMPORTANT
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -14,123 +15,172 @@ try {
   console.error("⚠️ Could not load allowedMembers.js:", err.message);
 }
 
-// Debug helper
-console.log("AUTH CONTROLLER LOADED - env checks:");
+// Debug env
+console.log("AUTH CONTROLLER ENV CHECK:");
 console.log("  - JWT_SECRET present:", !!process.env.JWT_SECRET);
 console.log("  - NODE_ENV:", process.env.NODE_ENV || "not-set");
 
-/** ✅ Function to check if email or rollnumber is allowed */
+/** ✅ Helper: check if email or rollnumber is allowed */
 async function isAllowedMember({ email, rollnumber }) {
-  if (String(process.env.DISABLE_MEMBERSHIP_CHECK).toLowerCase() === 'true') {
-    return { allowed: true, source: 'disabled-by-env' };
+  if (String(process.env.DISABLE_MEMBERSHIP_CHECK).toLowerCase() === "true") {
+    return { allowed: true, source: "disabled-by-env" };
   }
 
-  const normalizedEmail = email ? email.toLowerCase().trim() : '';
-  const normalizedRoll = rollnumber ? rollnumber.toLowerCase().trim() : '';
+  const normalizedEmail = email ? email.toLowerCase().trim() : "";
+  const normalizedRoll = rollnumber ? rollnumber.toLowerCase().trim() : "";
 
-  // If no list loaded, deny by default
   if (!allowedList || !allowedList.length) {
     console.warn("⚠️ allowedMembers list empty — denying all signups.");
-    return { allowed: false, source: 'empty-list' };
+    return { allowed: false, source: "empty-list" };
   }
 
   const lowerList = allowedList.map((x) => String(x).toLowerCase().trim());
+
   if (normalizedEmail && lowerList.includes(normalizedEmail)) {
-    return { allowed: true, source: 'file' };
+    return { allowed: true, source: "file" };
   }
   if (normalizedRoll && lowerList.includes(normalizedRoll)) {
-    return { allowed: true, source: 'file' };
+    return { allowed: true, source: "file" };
   }
 
-  return { allowed: false, source: 'file' };
+  return { allowed: false, source: "file" };
 }
 
-/** ✅ New route for frontend membership check */
+/** ✅ Membership check endpoint */
 const checkMember = async (req, res) => {
   try {
     const email = req.query.email ? String(req.query.email).toLowerCase() : null;
     const rollnumber = req.query.rollnumber ? String(req.query.rollnumber).toLowerCase() : null;
+
     if (!email && !rollnumber) {
-      return res.status(400).json({ allowed: false, message: 'Please provide email or rollnumber to check' });
+      return res.status(400).json({
+        allowed: false,
+        message: "Please provide email or rollnumber",
+      });
     }
 
     const result = await isAllowedMember({ email, rollnumber });
+
     if (result.allowed) {
-      return res.status(200).json({ allowed: true, message: 'Allowed to register', source: result.source });
-    } else {
-      return res.status(403).json({ allowed: false, message: 'Not allowed to register', source: result.source });
+      return res.status(200).json({
+        allowed: true,
+        message: "Allowed to register",
+        source: result.source,
+      });
     }
+
+    return res.status(403).json({
+      allowed: false,
+      message: "Not allowed to register",
+      source: result.source,
+    });
   } catch (err) {
-    console.error("checkMember error:", err);
-    return res.status(500).json({ allowed: false, message: 'Membership check failed' });
+    console.error("CHECK MEMBER ERROR:", err);
+    return res.status(500).json({
+      allowed: false,
+      message: "Membership check failed",
+    });
   }
 };
 
-// --- Signup
+// =======================
+// SIGNUP
+// =======================
 const signup = async (req, res) => {
   try {
-    console.log("SIGNUP body:", req.body);
+    await connectToMongoose(); // 🔥 CRITICAL FOR SERVERLESS
 
-    if (!req.body) return res.status(400).json({ message: "Missing request body", success: false });
+    const { name, email, password, rollnumber, role } = req.body || {};
 
-    const { name, email, password, rollnumber, role } = req.body;
-    if (!email || !password || !name) {
+    if (!name || !email || !password) {
       return res.status(400).json({
-        message: "Missing required fields: name, email and password are required",
+        message: "Name, email and password are required",
         success: false,
       });
     }
 
-    // Check if this user is allowed
     const membership = await isAllowedMember({ email, rollnumber });
     if (!membership.allowed) {
       return res.status(403).json({
         message: "You are not allowed to register on this site.",
         success: false,
-        allowed: false,
-        source: membership.source
+        source: membership.source,
       });
     }
 
-    // Prevent duplicate signup
     const existing = await UserModel.findOne({ email: email.toLowerCase() });
     if (existing) {
-      return res.status(409).json({ message: "User already exists, please login", success: false });
+      return res.status(409).json({
+        message: "User already exists, please login",
+        success: false,
+      });
     }
 
-    const user = new UserModel({ name, email: email.toLowerCase(), password, rollnumber, role });
     const saltRounds = parseInt(process.env.SALT_ROUNDS, 10) || 10;
-    user.password = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const user = new UserModel({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      rollnumber,
+      role,
+    });
+
     await user.save();
 
-    res.status(201).json({ message: "Signup successful", success: true });
+    return res.status(201).json({
+      message: "Signup successful",
+      success: true,
+    });
   } catch (err) {
     console.error("SIGNUP ERROR:", err.stack || err);
     return res.status(500).json({
       message: "Internal server error",
       success: false,
-      error: err.message,
     });
   }
 };
 
-// --- Login
+// =======================
+// LOGIN
+// =======================
 const login = async (req, res) => {
   try {
+    await connectToMongoose(); // 🔥 CRITICAL FOR SERVERLESS
+
     const { email, password } = req.body || {};
+
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required", success: false });
+      return res.status(400).json({
+        message: "Email and password required",
+        success: false,
+      });
     }
 
     const user = await UserModel.findOne({ email: email.toLowerCase() });
-    if (!user) return res.status(403).json({ message: "Email or password incorrect", success: false });
+    if (!user) {
+      return res.status(403).json({
+        message: "Email or password incorrect",
+        success: false,
+      });
+    }
 
     const isPassEqual = await bcrypt.compare(password, user.password);
-    if (!isPassEqual) return res.status(403).json({ message: "Email or password incorrect", success: false });
+    if (!isPassEqual) {
+      return res.status(403).json({
+        message: "Email or password incorrect",
+        success: false,
+      });
+    }
 
-    const token = jwt.sign({ email: user.email, _id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
+    const token = jwt.sign(
+      { _id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Login successful",
       success: true,
       jwtToken: token,
@@ -139,8 +189,15 @@ const login = async (req, res) => {
     });
   } catch (err) {
     console.error("LOGIN ERROR:", err.stack || err);
-    return res.status(500).json({ message: "Internal server error", success: false });
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
 
-module.exports = { signup, login, checkMember };
+module.exports = {
+  signup,
+  login,
+  checkMember,
+};
