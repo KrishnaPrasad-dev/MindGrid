@@ -1,33 +1,44 @@
 // backend/Models/db.js
 const mongoose = require("mongoose");
 
-// 🔥 Disable mongoose buffering (CRITICAL for serverless)
+// 🔥 Critical for serverless
 mongoose.set("bufferCommands", false);
 
 const MONGO_URI = process.env.MONGO_CONN;
 
 if (!MONGO_URI) {
-  throw new Error("❌ MONGO_CONN environment variable is not set");
+  throw new Error("MONGO_CONN environment variable is missing");
 }
 
-// Global cache for serverless
+// Global cache (survives across invocations)
 let cached = global._mongoose;
 if (!cached) {
   cached = global._mongoose = { conn: null, promise: null };
 }
 
 async function connectToMongoose() {
-  // Reuse existing connection
+  // If already connected, reuse
   if (cached.conn) {
     return cached.conn;
   }
 
-  // Create connection promise if not exists
+  // If no connection attempt yet, create one
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 5000, // fail fast
-      maxPoolSize: 5,                // safe for serverless
-    });
+    cached.promise = mongoose
+      .connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 5000,
+        maxPoolSize: 5,
+      })
+      .then((mongooseInstance) => {
+        console.log("✅ MongoDB connected");
+        return mongooseInstance;
+      })
+      .catch((err) => {
+        console.error("❌ MongoDB connection failed:", err.message);
+        // 🔥 RESET so next request can retry
+        cached.promise = null;
+        throw err;
+      });
   }
 
   cached.conn = await cached.promise;
