@@ -1,69 +1,41 @@
-// Models/db.js
-// Serverless-friendly mongoose connector (CommonJS)
-// Replace your existing file with this copy-paste version.
+// backend/config/db.js
+// Serverless-safe mongoose connector (Vercel compatible)
 
 const mongoose = require('mongoose');
 
-const MONGO_URI = process.env.MONGO_CONN;
+const MONGO_URI = process.env.MONGO_CONN; // 🔴 MUST MATCH Vercel ENV NAME
+
 if (!MONGO_URI) {
-  throw new Error('MONGO_URI environment variable is not set');
+  throw new Error('MONGO_CONN environment variable is not set');
 }
 
-const globalAny = global;
+let cached = global._mongoose;
 
-if (!globalAny._mongoose) {
-  globalAny._mongoose = { conn: null, promise: null };
+if (!cached) {
+  cached = global._mongoose = { conn: null, promise: null };
 }
 
 async function connectToMongoose() {
-  if (globalAny._mongoose.conn) {
-    return globalAny._mongoose.conn;
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  if (!globalAny._mongoose.promise) {
-    // serverless-friendly mongoose options
+  if (!cached.promise) {
     const opts = {
-      // Fail fast if server selection takes too long (ms)
       serverSelectionTimeoutMS: 5000,
-      // Close sockets that are idle for too long
       socketTimeoutMS: 45000,
-      // Limit pool size so you don't open too many connections from many lambdas
-      // (tune up if you need more concurrent DB operations)
       maxPoolSize: 5,
-      // Use unified topology (default in modern mongoose, but explicit here)
-      useUnifiedTopology: true,
     };
 
-    console.log('Creating new mongoose connection promise');
-    globalAny._mongoose.promise = mongoose.connect(MONGO_URI, opts).then((instance) => {
-      console.log('Mongoose connected');
-      return instance;
-    }).catch(err => {
-      console.error('Mongoose initial connect failed:', err && err.stack ? err.stack : err);
-      // rethrow so awaiting callers see the error
-      throw err;
+    console.log('🔌 Connecting to MongoDB...');
+    cached.promise = mongoose.connect(MONGO_URI, opts).then((mongooseInstance) => {
+      console.log('✅ MongoDB connected');
+      return mongooseInstance;
     });
   }
 
-  globalAny._mongoose.conn = await globalAny._mongoose.promise;
-  return globalAny._mongoose.conn;
-}
-
-// Start connecting now (keeps behavior similar to previous code)
-// On serverless platforms this will attempt connect on cold-start; if it fails,
-// the logs will show the error.
-connectToMongoose().catch((err) => {
-  console.error('Initial Mongoose connection error:', err && err.stack ? err.stack : err);
-});
-
-// Helpful global handlers so stack traces appear in Vercel logs
-if (typeof process !== 'undefined') {
-  process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection in process:', err && err.stack ? err.stack : err);
-  });
-  process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception in process:', err && err.stack ? err.stack : err);
-  });
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 module.exports = { connectToMongoose };
