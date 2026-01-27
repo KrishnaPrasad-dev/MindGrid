@@ -9,7 +9,10 @@ const Clubmembers = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
 
+
+const API_URL = import.meta.env.VITE_API_URL; 
   // ✅ Fetch all club members (protected route)
   useEffect(() => {
     const fetchMembers = async () => {
@@ -28,16 +31,15 @@ const Clubmembers = () => {
           setLoading(false);
           return;
         }
+const res = await axios.get(
+  `${API_URL}/members`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
-        // Make API call
-        const res = await axios.get(
-          "https://mindgrid-backend.vercel.app/members",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
 
         if (!res.data.success) {
           throw new Error(res.data.message || "Failed to fetch members");

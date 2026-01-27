@@ -5,7 +5,12 @@ import 'react-toastify/dist/ReactToastify.css'
 import InputSpotlightBorder from '../constants/InputSpotlightBorder'
 
 // Vite env (set VITE_API_URL in your frontend .env or Vercel env)
-const API_BASE = import.meta.env.VITE_API_URL || 'https://mindgrid-backend.vercel.app'
+const API_BASE = import.meta.env.VITE_API_URL;
+
+if (!API_BASE) {
+  throw new Error("VITE_API_URL is not defined");
+}
+
 
 // helper: safely parse JSON response or return text for debugging
 async function parseResponseBody(res) {
