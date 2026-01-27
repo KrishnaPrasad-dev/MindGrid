@@ -1,19 +1,19 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Example from '../constants/EncryptButton';
-import { ToastContainer } from 'react-toastify';
-import { useState } from 'react';
-import { handleError, handleSuccess } from './Utils';
-import CardSpotlight from '../constants/CardSpotlight';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Example from "../constants/EncryptButton";
+import { ToastContainer } from "react-toastify";
+import { useState } from "react";
+import { handleError, handleSuccess } from "./Utils";
+import CardSpotlight from "../constants/CardSpotlight";
 
 // ===== ADD THIS: API URL Configuration =====
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 // ============================================
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = loginInfo;
     if (!email || !password) {
-      return handleError('All Credentials are required');
+      return handleError("All Credentials are required");
     }
     try {
       const url = `${API_URL}/auth/login`;
@@ -38,8 +38,8 @@ const Login = () => {
       const start = performance.now();
 
       const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginInfo),
       });
 
@@ -47,48 +47,42 @@ const Login = () => {
       const result = await response.json();
       const jsonDone = performance.now();
       console.log(
-        'login timings (ms): fetch:',
+        "login timings (ms): fetch:",
         (fetchDone - start).toFixed(1),
-        'json:',
+        "json:",
         (jsonDone - fetchDone).toFixed(1),
-        'total:',
-        (jsonDone - start).toFixed(1)
+        "total:",
+        (jsonDone - start).toFixed(1),
       );
 
       const { success, message, jwtToken, name, error } = result;
 
       if (success && jwtToken) {
         // only store token after successful login
-        localStorage.setItem('token', jwtToken);
-        localStorage.setItem('jwtToken', jwtToken); // set both keys for safety
-        localStorage.setItem('loggedInUser', name || '');
+        localStorage.setItem("token", jwtToken);
+        localStorage.setItem("jwtToken", jwtToken); // set both keys for safety
+        localStorage.setItem("loggedInUser", name || "");
 
         // 🔔 notify the app that auth state changed (so App.jsx updates immediately)
-        window.dispatchEvent(new Event('auth-change'));
+        window.dispatchEvent(new Event("auth-change"));
 
-        handleSuccess(message || 'Login successful');
+        handleSuccess(message || "Login successful");
         // navigate immediately to root; App.jsx will see the auth-change and update
-        navigate('/', { replace: true });
+        navigate("/", { replace: true });
         return;
       } else if (error) {
-        const details = error?.details?.[0]?.message || error?.message || 'Login failed';
+        const details =
+          error?.details?.[0]?.message || error?.message || "Login failed";
         handleError(details);
       } else {
-        handleError(message || 'Login failed');
+        handleError(message || "Login failed");
       }
 
-      console.log('login result:', result);
+      console.log("login result:", result);
     } catch (err) {
-      console.error('login error', err);
+      console.error("login error", err);
       handleError(err?.message || String(err));
     }
-  };
-
-  const handleLogout = (e) => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('loggedInUser');
-    navigate('/login', { replace: true });
   };
 
   return (
@@ -107,7 +101,9 @@ const Login = () => {
           <form onSubmit={handleLogin}>
             <div className="space-y-6">
               <div>
-                <label className="text-slate-300 text-sm font-medium mb-2 block">Email Id</label>
+                <label className="text-slate-300 text-sm font-medium mb-2 block">
+                  Email Id
+                </label>
                 <input
                   onChange={handleChange}
                   name="email"
@@ -119,7 +115,9 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="text-slate-300 text-sm font-medium mb-2 block">Password</label>
+                <label className="text-slate-300 text-sm font-medium mb-2 block">
+                  Password
+                </label>
                 <input
                   onChange={handleChange}
                   name="password"
@@ -129,6 +127,15 @@ const Login = () => {
                   value={loginInfo.password}
                 />
               </div>
+
+              <div className="flex justify-end mt-2">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-blue-400 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             <div className="mt-12">
@@ -137,9 +144,11 @@ const Login = () => {
             </div>
 
             <p className="text-slate-400 text-sm mt-6 text-center">
-              Does't have an account?{' '}
+              Does't have an account?{" "}
               <span className="text-blue-400 font-medium hover:underline ml-1">
-                <Link type="submit" to="/signup">signup here</Link>
+                <Link type="submit" to="/signup">
+                  signup here
+                </Link>
               </span>
             </p>
           </form>

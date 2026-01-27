@@ -1,23 +1,23 @@
-import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import React from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import ForgotPassword from "./sections/ForgotPassword";
+import Navbar from "./sections/Navbar";
+import Hero from "./sections/Hero";
+import Explore from "./sections/Explore";
+import Clubmembers from "./sections/Clubmembers";
+import Signup from "./sections/Signup";
+import Login from "./sections/Login";
+import Profile from "./sections/Profile";
+import EditProfile from "./sections/EditProfile";
 
-import Navbar from './sections/Navbar';
-import Hero from './sections/Hero';
-import Explore from './sections/Explore';
-import Clubmembers from './sections/Clubmembers';
-import Signup from './sections/Signup';
-import Login from './sections/Login';
-import Profile from './sections/Profile';
-import EditProfile from './sections/EditProfile';
-
-import 'react-toastify/ReactToastify.css';
+import "react-toastify/ReactToastify.css";
 
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
   try {
     if (!token) return null;
-    const payload = token.split('.')[1];
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    const payload = token.split(".")[1];
+    const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
     return JSON.parse(decodeURIComponent(escape(decoded)));
   } catch {
     return null;
@@ -30,9 +30,11 @@ const MyProfileRedirect = () => {
 
   React.useEffect(() => {
     const token =
-      typeof window !== 'undefined'
-        ? localStorage.getItem('token') || localStorage.getItem('jwtToken') || ''
-        : '';
+      typeof window !== "undefined"
+        ? localStorage.getItem("token") ||
+          localStorage.getItem("jwtToken") ||
+          ""
+        : "";
 
     const payload = parseJwt(token);
     const userId = payload?._id || payload?.id || payload?.userId || null;
@@ -40,7 +42,7 @@ const MyProfileRedirect = () => {
     if (userId) {
       navigate(`/profile/${userId}`, { replace: true });
     } else {
-      navigate('/login', { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [navigate]);
 
@@ -56,9 +58,11 @@ const App = () => {
   React.useEffect(() => {
     try {
       const stored =
-        typeof window !== 'undefined'
-          ? localStorage.getItem('token') || localStorage.getItem('jwtToken') || ''
-          : '';
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") ||
+            localStorage.getItem("jwtToken") ||
+            ""
+          : "";
 
       if (stored) {
         const payload = parseJwt(stored);
@@ -67,7 +71,7 @@ const App = () => {
         setUser(null);
       }
     } catch (err) {
-      console.warn('Auth restore failed:', err);
+      console.warn("Auth restore failed:", err);
       setUser(null);
     } finally {
       setLoading(false);
@@ -79,9 +83,11 @@ const App = () => {
     const handler = () => {
       try {
         const stored =
-          typeof window !== 'undefined'
-            ? localStorage.getItem('token') || localStorage.getItem('jwtToken') || ''
-            : '';
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") ||
+              localStorage.getItem("jwtToken") ||
+              ""
+            : "";
 
         if (stored) {
           setUser(parseJwt(stored) || null);
@@ -89,26 +95,31 @@ const App = () => {
           setUser(null);
         }
       } catch (err) {
-        console.warn('Auth update failed:', err);
+        console.warn("Auth update failed:", err);
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
-    window.addEventListener('auth-change', handler);
-    window.addEventListener('storage', handler);
+    window.addEventListener("auth-change", handler);
+    window.addEventListener("storage", handler);
 
     return () => {
-      window.removeEventListener('auth-change', handler);
-      window.removeEventListener('storage', handler);
+      window.removeEventListener("auth-change", handler);
+      window.removeEventListener("storage", handler);
     };
   }, []);
 
   /** Root redirect: wait until loading is done */
   const RootRedirect = () => {
-    if (loading) return <div style={{ padding: 20, color: 'white' }}>Loading...</div>;
-    return user ? <Navigate to="/hero" replace /> : <Navigate to="/login" replace />;
+    if (loading)
+      return <div style={{ padding: 20, color: "white" }}>Loading...</div>;
+    return user ? (
+      <Navigate to="/hero" replace />
+    ) : (
+      <Navigate to="/login" replace />
+    );
   };
 
   return (
@@ -116,13 +127,15 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        {/* root route now waits for auth */}
+        
         <Route path="/" element={<RootRedirect />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/hero" element={<Hero />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route path="/explore" element={<Explore />} />
         <Route path="/clubmembers" element={<Clubmembers />} />

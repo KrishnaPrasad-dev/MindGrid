@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Example from '../constants/EncryptButton';
 import { ToastContainer } from 'react-toastify';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { handleError, handleSuccess } from './Utils';
 import CardSpotlight from '../constants/CardSpotlight';
 
