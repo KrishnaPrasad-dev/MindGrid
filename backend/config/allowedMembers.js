@@ -16,6 +16,7 @@ module.exports = [
   "gnu24et102367@gnuindia.org",
   "gnu24et102393@gnuindia.org",
   "itzmekrishna.257@gmail.com",
+  "goudkrishna365@gmail.com"
 
   
 ];
