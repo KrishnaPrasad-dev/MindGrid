@@ -66,28 +66,30 @@ const res = await axios.get(
       <Navbar />
 
       {/* Page Title */}
-      <div className="flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-5xl text-transparent sm:text-7xl mt-36 items-center justify-center relative mx-auto text-center">
+      <div className="flex animate-text-gradient font-extrabold bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-5xl text-transparent sm:text-7xl mt-20 items-center justify-center relative mx-auto text-center">
         Club Members
       </div>
 
       {/* Members List */}
-      <div className="relative mt-28 px-4">
-        <div className="w-full max-w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 dark:bg-gray-950 dark:border-gray-700">
+      <div className="relative mt-12 px-4">
+        <div className="w-full max-w-full p-4  border border-slate-700  rounded-lg shadow-sm sm:p-6 bg-indigo-900/70
+">
           <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white">
-            Club Members and their roles
+            Club Members and their roles    
           </h5>
 
           {loading ? (
-            <div className="py-8 text-center">Loading members…</div>
+            <div className="py-8 text-center text-white">Loading members…</div>
           ) : error ? (
             <div className="py-8 text-center text-red-500">Error: {error}</div>
           ) : members.length === 0 ? (
-            <div className="py-8 text-center">No members found.</div>
+            <div className="py-8 text-center text-white">No members found.</div>
           ) : (
             <ul className="my-4 space-y-3">
               {members.map((member) => (
                 <li key={member._id}>
-                  <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer">
+                  <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg  dark:text-white cursor-pointer  bg-slate-900 backdrop-blur-xl border border-slate-700/90
+">
                     <div className="flex ml-1 mr-1 sm:ml-2 sm:mr-2 relative">
                       <Link
                         to={`/profile/${member._id}`}

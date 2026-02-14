@@ -47,7 +47,7 @@ const CardSpotlight = ({ children }) => {
         className='pointer-events-none absolute -inset-px opacity-0 transition duration-300'
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,182,255,.15), transparent 40%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,182,255,.10), transparent 30%)`,
         }}
       />
       <div className="relative z-10 w-full">

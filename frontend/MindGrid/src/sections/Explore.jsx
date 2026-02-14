@@ -27,7 +27,7 @@ const Explore = () => {
             {/* Large left block (spans 2 columns on xl) */}
             <div className="xl:col-span-2 flex flex-col">
               <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <div className="flex-1 bg-gray-900/40 border border-gray-700 rounded-lg p-6">
+                <div className="flex-1 bg-gray-900/40  rounded-lg p-6">
                   <h2 className="text-white font-bold text-3xl sm:text-4xl lg:text-4xl">Club Members</h2>
                   <p className="mt-6 mb-6 text-gray-100 text-lg sm:text-xl max-w-prose">
                     "Want to see who’s part of the club? Here’s a quick look at the members and what they’re all about."
@@ -60,7 +60,7 @@ const Explore = () => {
 
             {/* Right column: Events */}
             <div className="flex flex-col">
-              <div className="bg-gray-900/40 border border-gray-700 rounded-lg p-6 h-full">
+              <div className="bg-gray-900/40  rounded-lg p-6 h-full">
                 <h3 className="text-white font-bold text-3xl sm:text-4xl">Events</h3>
                 <p className="mt-6 mb-6 text-gray-100 text-lg sm:text-xl max-w-prose">
                   "Check out the vibrant moments from our club events! Through the images gallery..."
