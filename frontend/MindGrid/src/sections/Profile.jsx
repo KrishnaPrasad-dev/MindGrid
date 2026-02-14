@@ -9,10 +9,10 @@ import githubIcon from '../assets/github.png'
 import linkedinIcon from '../assets/linkedin.png'
 
 /** Safely get API base (works in Vite & CRA) */
-const API_BASE = import.meta.env.VITE_API_URL
-if (!API_BASE) {
-  throw new Error('VITE_API_URL is not defined')
-}
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
+
+
 
 
 /** Parse JWT payload (no library needed) */
@@ -199,11 +199,7 @@ const Profile = (props) => {
       alert('No resume uploaded.')
       return
     }
-    try {
-      window.open(resumeHref, '_blank', 'noopener,noreferrer')
-    } catch (err) {
-      window.location.href = resumeHref
-    }
+    
   }
 
   return (
