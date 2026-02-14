@@ -1,22 +1,65 @@
+
 /**
- * 🔐 List of allowed club members who can sign up or log in.
- * 
- * Add emails or rollnumbers here — case insensitive.
- * You can add as many as you want.
+ * 🔐 Auto-generated list of allowed club member emails.
+ * Extracted from Excel file.
  */
 
 module.exports = [
-  // ✅ Example entries — replace these with your real ones:
-  "gnu24et102379@gnuindia.org",
-  "gnu24et102357@gnuindia.org",
-  "gnu24et102366@gnuindia.org",
-  "gnu24et102408@gnuindia.org",
-  "gnu24et102141@gnuindia.org",
-  "gnu24et102188@gnuindia.org",
-  "gnu24et102367@gnuindia.org",
-  "gnu24et102393@gnuindia.org",
+  "felintreesa.t067@gmail.com",
+  "mettuvarshitha995@gmail.com",
+  "mahithanakidi17@gmail.com",
+  "monishamalluri8@gmail.com",
+  "katakamrajasri@gmail.com",
+  "jakkanisamyuktha6@gmail.com",
+  "spandanakammari84@gmail.com",
+  "rampallibhavya11@gmail.com",
+  "evarshitha2007@gmail.com",
+  "katakamjahnavi06@gmail.com",
+  "sreechandanamogalgiddi@gmail.com",
+  "kollojumadhulika@gmail.com",
+  "aluguvellivyshnavi07@gmail.com",
+  "yeruva.ashley2606@gmail.com",
+  "sreejakotte306@gmail.com",
+  "bhavanaavuti4@gmail.com",
+  "pravalikakonda05@gmail.com",
+  "kalakondashashirekha2006@gmail.com",
+  "karatlapellylakshmisai@gmail.com",
+  "yadagiriadapa141@gmail.com",
+  "hasini.likki@gmail.com",
+  "tanushchowdarypolina@gmail.com",
+  "kamalladinesh2006@gmail.com",
+  "varshithgudumasu176@gmail.com",
+  "kilarihasini07@gmail.com",
+  "jelladivya13@gmail.com",
+  "madhupriyasripatho086@gmail.com",
+  "roshithasri126@gmail.com",
+  "jahnaviishi@gmail.com",
+  "rajeshwarreddy270407@gmail.com",
+  "pranaysamuel.sarilla@gmail.com",
+  "ramcharanx09@gmail.com",
+  "bejugamacherry@gmail.com",
+  "boinishivasai48@gmail.com",
+  "varmaharika4@gmail.com",
+  "thontivishnu@gmail.com",
+  "sowmyareddymandadi23@gmail.com",
+  "srihithach007@gmail.com",
+  "sriramgovindu25@gmail.com",
+  "tarunyepuri07@gmail.com",
   "itzmekrishna.257@gmail.com",
-  "goudkrishna365@gmail.com"
-
-  
+  "komaliparitala00@gmail.com",
+  "varshavenigalla2006@gmail.com",
+  "reddysamith@gmail.com",
+  "anjali.a2610@gmail.com",
+  "gudipelliharshitha@gmail.com",
+  "vigneshmanthani@gmail.com",
+  "thatimanvishmonu@gmail.com",
+  "cb4856550@gmail.com",
+  "pranvat13@gmail.com",
+  "avulasamba05@gmail.com",
+  "akshitha312006@gmail.com",
+  "nuthivinay0@gmail.com",
+  "srivinayareddy.09@gmail.com",
+  "jeendrucharitha16@gmail.com",
+  "korleparapraneetha@gmail.com",
+  "vijaypabbathi2@gmail.com",
 ];
