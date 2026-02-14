@@ -2,25 +2,47 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./Navbar";
-import crown from "../assets/crown.png";
 import pfpblu from "../assets/profileblue.jpeg";
+
+import presidentIcon from "../assets/crown.png";
+import vicePresidentIcon from "../assets/vice.png";
+import secretaryIcon from "../assets/secretary.png";
+import treasurerIcon from "../assets/treasure-chest.png";
+import coordinatorIcon from "../assets/programming (1).png";
+import skillsIcon from "../assets/project-management.png";
+import defaultIcon from "../assets/member.png";
+import CommIcon from "../assets/conversation.png";
+
+// Normalize role safely
+const getRoleIcon = (role) => {
+  if (!role) return defaultIcon;
+
+  const r = role.toLowerCase().replace(/-/g, " ").replace(/\s+/g, " ").trim();
+
+  if (r === "president") return presidentIcon;
+  if (r === "vice president") return vicePresidentIcon;
+  if (r === "secretary") return secretaryIcon;
+  if (r === "treasurer") return treasurerIcon;
+  if (r === "project coordinator") return coordinatorIcon;
+  if (r === "skills coordinator") return skillsIcon;
+  if (r === "skills lead communication") return CommIcon;
+
+  return defaultIcon;
+};
 
 const Clubmembers = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
 
+  const API_URL = import.meta.env.VITE_API_URL;
 
-const API_URL = import.meta.env.VITE_API_URL; 
-  // ✅ Fetch all club members (protected route)
   useEffect(() => {
     const fetchMembers = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        // Get token from localStorage
         const token =
           localStorage.getItem("token") ||
           localStorage.getItem("jwtToken") ||
@@ -31,15 +53,12 @@ const API_URL = import.meta.env.VITE_API_URL;
           setLoading(false);
           return;
         }
-const res = await axios.get(
-  `${API_URL}/members`,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
 
+        const res = await axios.get(`${API_URL}/members`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!res.data.success) {
           throw new Error(res.data.message || "Failed to fetch members");
@@ -51,7 +70,7 @@ const res = await axios.get(
         setError(
           err.response?.data?.message ||
             err.message ||
-            "Network error while fetching members"
+            "Network error while fetching members",
         );
       } finally {
         setLoading(false);
@@ -72,10 +91,9 @@ const res = await axios.get(
 
       {/* Members List */}
       <div className="relative mt-12 px-4">
-        <div className="w-full max-w-full p-4  border border-slate-700  rounded-lg shadow-sm sm:p-6 bg-indigo-900/70
-">
-          <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white">
-            Club Members and their roles    
+        <div className="w-full max-w-full p-4 border border-slate-700 rounded-lg shadow-sm sm:p-6 bg-slate-950/70 ">
+          <h5 className="mb-3 text-base font-semibold md:text-xl text-white">
+            Club Members and their roles
           </h5>
 
           {loading ? (
@@ -85,29 +103,56 @@ const res = await axios.get(
           ) : members.length === 0 ? (
             <div className="py-8 text-center text-white">No members found.</div>
           ) : (
-            <ul className="my-4 space-y-3">
+            <ul className="my-4 space-y-4">
               {members.map((member) => (
                 <li key={member._id}>
-                  <div className="flex items-center justify-between p-3 font-bold text-gray-900 rounded-lg  dark:text-white cursor-pointer  bg-slate-900 backdrop-blur-xl border border-slate-700/90
-">
-                    <div className="flex ml-1 mr-1 sm:ml-2 sm:mr-2 relative">
-                      <Link
-                        to={`/profile/${member._id}`}
-                        className="flex items-center gap-2 sm:gap-3"
-                      >
-                        <img
-                          src={member.profilePic || pfpblu}
-                          className="rounded-full h-6 w-6 sm:h-7 sm:w-7"
-                          alt="Profile"
-                        />
-                        <p className="sm:text-lg">{member.name}</p>
-                      </Link>
-                    </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 font-bold rounded-lg bg-slate-900 backdrop-blur-xl border border-slate-700/90">
+                    {/* LEFT SIDE (Profile + Name) */}
+                    <Link
+                      to={`/profile/${member._id}`}
+                      className="flex items-center gap-3 w-full sm:w-auto"
+                    >
+                      <img
+                        src={member.profilePic || pfpblu}
+                        className="rounded-full h-8 w-8 sm:h-10 sm:w-10 object-cover"
+                        alt="Profile"
+                      />
 
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-3 py-2.5 sm:px-5 sm:py-2.5 sm:text-base inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                      {member.role || "Member"}
-                      <img src={crown} className="ml-2 h-4 w-4" alt="crown" />
-                    </button>
+                      <p className="text-white text-md sm:text-lg leading-tight break-words">
+                        {member.name}
+                      </p>
+                    </Link>
+
+                    {/* ROLE BADGE */}
+                    <div
+                      className="
+    flex items-center justify-center
+    min-w-[160px] sm:min-w-[220px]
+    min-h-[52px]
+    px-4
+    rounded-xl
+    bg-sky-600
+    text-white
+    text-md sm:text-base
+    font-semibold
+    text-center
+    break-words
+    transition
+    hover:scale-[1.03]
+  "
+                    >
+                      <span className="leading-snug">
+                        {member.role || "Member"}
+                      </span>
+
+                      {getRoleIcon(member.role) && (
+                        <img
+                          src={getRoleIcon(member.role)}
+                          className="ml-2 h-8 w-8 flex-shrink-0"
+                          alt="role icon"
+                        />
+                      )}
+                    </div>
                   </div>
                 </li>
               ))}

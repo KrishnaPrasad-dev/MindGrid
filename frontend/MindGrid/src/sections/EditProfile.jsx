@@ -214,7 +214,7 @@ export default function EditProfile() {
                   </option>
                   <option value="Skills Coordinator">Skills Coordinator</option>
                   <option value="Skills Lead - Communication">
-                    Skills Lead - Communication
+                    Skills Lead - Comm
                   </option>
                  
                  
