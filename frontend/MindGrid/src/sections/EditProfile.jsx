@@ -1,10 +1,9 @@
-// src/pages/EditProfile.jsx
 import React, { useState, useEffect } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import InputSpotlightBorder from '../constants/InputSpotlightBorder'
 
-// Vite env (set VITE_API_URL in your frontend .env or Vercel env)
+
 const API_BASE = import.meta.env.VITE_API_URL;
 
 if (!API_BASE) {
@@ -12,7 +11,6 @@ if (!API_BASE) {
 }
 
 
-// helper: safely parse JSON response or return text for debugging
 async function parseResponseBody(res) {
   const ct = res.headers.get('content-type') || ''
   if (ct.includes('application/json')) {
