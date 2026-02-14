@@ -9,10 +9,10 @@ import githubIcon from '../assets/github.png'
 import linkedinIcon from '../assets/linkedin.png'
 
 /** Safely get API base (works in Vite & CRA) */
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-
-
-
+const API_BASE = import.meta.env.VITE_API_URL
+if (!API_BASE) {
+  throw new Error('VITE_API_URL is not defined')
+}
 
 
 /** Parse JWT payload (no library needed) */
@@ -91,7 +91,6 @@ const Profile = (props) => {
 
       const axiosConfig = token ? { headers: { Authorization: `Bearer ${token}` } } : {}
 
-      const candidatePaths = [`/members/${id}`, `/users/${id}`, `/auth/users/${id}`]
 
       try {
         // if caller provided a user in state, show immediately
@@ -115,30 +114,17 @@ const Profile = (props) => {
           // continue to refresh from server in background
         }
 
-        let got = null
-        let lastErr = null
+       let got = null
 
-        for (const p of candidatePaths) {
-          try {
-            const res = await axios.get(`${API_BASE}${p}`, axiosConfig)
-            const body = res.data
-            if (!body) throw new Error('Empty response')
+try {
+  const res = await axios.get(`${API_BASE}/api/profile/${id}`, axiosConfig)
+  got = res.data
+} catch (err) {
+  if (err.response?.status !== 404) {
+    throw err
+  }
+}
 
-            let found = body.name ? body : body.member ? body.member : body.data ? body.data : body.user ? body.user : null
-
-            if (!found && Array.isArray(body.members)) {
-              found = body.members.find((m) => String(m._id) === String(id) || String(m.id) === String(id))
-            }
-
-            if (found) {
-              got = found
-              break
-            }
-          } catch (err) {
-            lastErr = err
-            if (err.response?.status === 404) continue
-          }
-        }
 
         if (got && !cancelled) {
           setUser((prev) => ({
@@ -156,8 +142,9 @@ const Profile = (props) => {
             linkedinurl: got.linkedinurl || got.linkedin || prev.linkedinurl,
           }))
         } else if (!got && !stateUser) {
-          throw lastErr || new Error('User not found')
-        }
+  throw new Error('User not found')
+}
+
       } catch (err) {
         if (!cancelled) {
           console.error('Profile fetch error:', err)
@@ -199,7 +186,11 @@ const Profile = (props) => {
       alert('No resume uploaded.')
       return
     }
-    
+    try {
+      window.open(resumeHref, '_blank', 'noopener,noreferrer')
+    } catch (err) {
+      window.location.href = resumeHref
+    }
   }
 
   return (
