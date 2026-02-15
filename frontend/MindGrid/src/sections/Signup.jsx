@@ -13,8 +13,7 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
-    rollnumber: '',
-    role: ''
+    rollnumber: ''
   });
 
   const [checking, setChecking] = useState(false);
@@ -77,8 +76,8 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { name, email, password, rollnumber, role } = signupInfo;
-    if (!name || !email || !password || !rollnumber || !role) {
+    const { name, email, password, rollnumber } = signupInfo;
+    if (!name || !email || !password || !rollnumber) {
       return handleError('All Credentials are required');
     }
 
@@ -201,17 +200,7 @@ const Signup = () => {
                 />
               </div>
 
-              <div>
-                <label className="text-slate-300 text-sm font-medium mb-2 block">Role</label>
-                <input
-                  onChange={handleChange}
-                  name="role"
-                  type="text"
-                  className="text-slate-900 bg-white border border-gray-300 w-full text-sm px-4 py-3 rounded-md outline-blue-500"
-                  placeholder="Enter Your Role"
-                  value={signupInfo.role}
-                />
-              </div>
+              
             </div>
 
             <div className="mt-12">
