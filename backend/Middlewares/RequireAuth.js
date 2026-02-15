@@ -14,7 +14,7 @@ const requireAuth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Find user (optional if you only need basic check)
-    const user = await UserModel.findById(decoded._id).select('name role');
+    const user = await UserModel.findById(decoded._id).select('name');
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
     }

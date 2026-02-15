@@ -90,7 +90,7 @@ const signup = async (req, res) => {
   try {
     await connectToMongoose(); // 🔥 CRITICAL FOR SERVERLESS
 
-    const { name, email, password, rollnumber, role } = req.body || {};
+    const { name, email, password, rollnumber} = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -124,7 +124,7 @@ const signup = async (req, res) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       rollnumber,
-      role,
+      
     });
 
     await user.save();
