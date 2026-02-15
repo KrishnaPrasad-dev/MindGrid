@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import ForgotPassword from "./sections/ForgotPassword";
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
 import Explore from "./sections/Explore";
@@ -9,9 +8,8 @@ import Signup from "./sections/Signup";
 import Login from "./sections/Login";
 import Profile from "./sections/Profile";
 import EditProfile from "./sections/EditProfile";
-
 import "react-toastify/ReactToastify.css";
-
+import Contributions from "./sections/Contributions";
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
   try {
@@ -135,7 +133,7 @@ const App = () => {
 
         <Route path="/hero" element={<Hero />} />
 
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/contributions" element={<Contributions />} />
 
         <Route path="/explore" element={<Explore />} />
         <Route path="/clubmembers" element={<Clubmembers />} />
@@ -145,6 +143,8 @@ const App = () => {
         <Route path="/profile/:id" element={<Profile />} />
 
         <Route path="/editprofile" element={<EditProfile />} />
+        
+
       </Routes>
     </main>
   );

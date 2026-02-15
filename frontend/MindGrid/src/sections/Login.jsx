@@ -128,14 +128,7 @@ const Login = () => {
                 />
               </div>
 
-              <div className="flex justify-end mt-2">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-blue-400 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              
             </div>
 
             <div className="mt-12">

@@ -74,7 +74,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/hero"
-            className="text-neutral-400 font-bold hover:text-white transition-colors inline-flex animate-text-gradient bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe] bg-[200%_auto] bg-clip-text text-xl text-transparent"
+            className="hover:text-neutral-400 font-bold text-white transition-colors inline-flex  text-xl "
           >
             MindGrid
             <img src={brainImg} className="h-7 w-7" alt="Brain" />
@@ -103,6 +103,13 @@ const Navbar = () => {
               className="ml-6 text-neutral-400 hover:text-white font-generalsans font-bold nav-li_a"
             >
               Club Members
+            </Link>
+
+            <Link
+              to="/contributions"
+              className="ml-6 text-neutral-400 hover:text-white font-generalsans font-bold nav-li_a"
+            >
+              Contributions
             </Link>
 
             {/* Profile - beside Club Members */}
@@ -138,6 +145,14 @@ const Navbar = () => {
               className=" text-neutral-400 hover:text-white font-generalsans font-bold nav-li_a flex ml-4 mt-6 mb-5 "
             >
               Club Members
+            </Link>
+
+            <Link
+              to="/contributions"
+              onClick={closeMenu}
+              className=" text-neutral-400 hover:text-white font-generalsans font-bold nav-li_a flex ml-4 mt-6 mb-5 "
+            >
+              Contributions
             </Link>
 
             <button

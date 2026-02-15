@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
+const contributionRoutes = require("./Routes/Contribution");
+
 
 const { connectToMongoose } = require('./Models/db'); // ✅ FIX
 connectToMongoose().catch(console.error);              // ✅ FIX
@@ -50,6 +52,8 @@ app.get('/ping', (req, res) => {
 app.use('/auth', AuthRouter);
 app.use('/members', MembersRouter);
 app.use('/api', ProfileRouter);
+app.use("/api/contributions", contributionRoutes);
+
 
 module.exports = app;
 

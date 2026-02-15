@@ -3,11 +3,10 @@ import { motion } from "framer-motion";
 import { calculateSizes } from '../constants/index.js';
 import brainImg from '../assets/brainrababu.gif';
 import arrowblk from '../assets/next.png'
-import { Link, useNavigate } from "react-router-dom";
-import Explore from './Explore.jsx';
-import { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
+
 import GlowingCard from '../constants/GlowingCard.jsx';
-import clubpic from '../assets/clubimg.jpg'
+
 
 const Hero = () => {
 

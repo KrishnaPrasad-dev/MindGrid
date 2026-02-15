@@ -18,7 +18,14 @@ const UserSchema = new mongoose.Schema({
   skills: {
     type: [String],
     default: []
-  }
+  },
+
+  totalContribution: {
+  type: Number,
+  default: 0
+}
+
+
 
 }, { timestamps: true });
 
