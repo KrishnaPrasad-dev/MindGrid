@@ -26,19 +26,22 @@ async function isAllowedMember({ email, rollnumber }) {
     return { allowed: true, source: "disabled-by-env" };
   }
 
-  const normalizedEmail = email ? email.toLowerCase().trim() : "";
-  const normalizedRoll = rollnumber ? rollnumber.toLowerCase().trim() : "";
+  const normalizedEmail = email ? String(email).toLowerCase().trim() : "";
+  const normalizedRoll = rollnumber ? String(rollnumber).toLowerCase().trim() : "";
 
   if (!allowedList || !allowedList.length) {
     console.warn("⚠️ allowedMembers list empty — denying all signups.");
     return { allowed: false, source: "empty-list" };
   }
 
-  const lowerList = allowedList.map((x) => String(x).toLowerCase().trim());
+  const lowerList = allowedList.map((x) =>
+    String(x).toLowerCase().trim()
+  );
 
   if (normalizedEmail && lowerList.includes(normalizedEmail)) {
     return { allowed: true, source: "file" };
   }
+
   if (normalizedRoll && lowerList.includes(normalizedRoll)) {
     return { allowed: true, source: "file" };
   }
@@ -49,8 +52,13 @@ async function isAllowedMember({ email, rollnumber }) {
 /** ✅ Membership check endpoint */
 const checkMember = async (req, res) => {
   try {
-    const email = req.query.email ? String(req.query.email).toLowerCase() : null;
-    const rollnumber = req.query.rollnumber ? String(req.query.rollnumber).toLowerCase() : null;
+    const email = req.query.email
+      ? String(req.query.email).toLowerCase().trim()
+      : null;
+
+    const rollnumber = req.query.rollnumber
+      ? String(req.query.rollnumber).toLowerCase().trim()
+      : null;
 
     if (!email && !rollnumber) {
       return res.status(400).json({
@@ -90,7 +98,7 @@ const signup = async (req, res) => {
   try {
     await connectToMongoose(); // 🔥 CRITICAL FOR SERVERLESS
 
-    const { name, email, password, rollnumber} = req.body || {};
+    const { name, email, password, rollnumber } = req.body || {};
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -99,7 +107,17 @@ const signup = async (req, res) => {
       });
     }
 
-    const membership = await isAllowedMember({ email, rollnumber });
+    // ✅ Normalize inputs ONCE and reuse everywhere
+    const cleanEmail = String(email).toLowerCase().trim();
+    const cleanRoll = rollnumber
+      ? String(rollnumber).toLowerCase().trim()
+      : "";
+
+    const membership = await isAllowedMember({
+      email: cleanEmail,
+      rollnumber: cleanRoll,
+    });
+
     if (!membership.allowed) {
       return res.status(403).json({
         message: "You are not allowed to register on this site.",
@@ -108,7 +126,8 @@ const signup = async (req, res) => {
       });
     }
 
-    const existing = await UserModel.findOne({ email: email.toLowerCase() });
+    const existing = await UserModel.findOne({ email: cleanEmail });
+
     if (existing) {
       return res.status(409).json({
         message: "User already exists, please login",
@@ -121,10 +140,9 @@ const signup = async (req, res) => {
 
     const user = new UserModel({
       name,
-      email: email.toLowerCase(),
+      email: cleanEmail,
       password: hashedPassword,
-      rollnumber,
-      
+      rollnumber: cleanRoll,
     });
 
     await user.save();
@@ -158,7 +176,10 @@ const login = async (req, res) => {
       });
     }
 
-    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    const cleanEmail = String(email).toLowerCase().trim();
+
+    const user = await UserModel.findOne({ email: cleanEmail });
+
     if (!user) {
       return res.status(403).json({
         message: "Email or password incorrect",
@@ -167,6 +188,7 @@ const login = async (req, res) => {
     }
 
     const isPassEqual = await bcrypt.compare(password, user.password);
+
     if (!isPassEqual) {
       return res.status(403).json({
         message: "Email or password incorrect",
