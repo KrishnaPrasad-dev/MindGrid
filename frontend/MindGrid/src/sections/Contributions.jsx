@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import LightPillar from "../constants/LightPillar";
 
-const TREASURER_EMAIL = "itzmekrishna.257@gmail.com";
+const TREASURER_EMAIL = "felintreesa.t067@gmail.com";
 const API_BASE =
   import.meta.env.VITE_API_URL || "http://localhost:8080";
 
