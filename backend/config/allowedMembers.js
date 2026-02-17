@@ -17,6 +17,7 @@ module.exports = [
   "katakamjahnavi06@gmail.com",
   "sreechandanamogalgiddi@gmail.com",
   "kollojumadhulika@gmail.com",
+  "nallanagulapavani09@gmail.com",
   "aluguvellivyshnavi07@gmail.com",
   "yeruva.ashley2606@gmail.com",
   "sreejakotte306@gmail.com",
