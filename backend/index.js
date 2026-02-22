@@ -49,6 +49,10 @@ app.get('/ping', (req, res) => {
   res.send('PONG');
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/auth', AuthRouter);
 app.use('/members', MembersRouter);
 app.use('/api', ProfileRouter);
