@@ -43,12 +43,10 @@ const ProjectSchema = new mongoose.Schema({
     required: true
   },
 
-  teamMembers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'users'
-    }
-  ],
+  teamMembers: {
+  type: [String],
+  default: []
+},
 
   isFeatured: {
     type: Boolean,
