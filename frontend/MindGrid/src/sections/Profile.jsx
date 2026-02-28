@@ -314,6 +314,8 @@ try {
                       <img src={linkedinIcon} alt="linkedin" />
                     </a>
                   </div>
+
+                  
                 </div>
               </>
             )}

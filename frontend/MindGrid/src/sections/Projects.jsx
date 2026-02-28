@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import githubIcon from "../assets/github.png";
+import linkedinIcon from "../assets/linkedin.png";
+import arrowIcon from "../assets/arrow-up.png";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -43,6 +48,18 @@ export default function Projects() {
           Projects
         </h1>
 
+        <motion.p
+          initial={{ opacity: 0, y: 80, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="hero_tag font-extrabold text-center text-gray_gradient"
+        >
+          <span>
+            Great ideas grow with great teams. <br />
+            <span className="block">Connect. Collaborate. Contribute.</span>
+          </span>
+        </motion.p>
+
         {loading ? (
           <p className="text-center text-gray-400">Loading projects...</p>
         ) : projects.length === 0 ? (
@@ -52,7 +69,7 @@ export default function Projects() {
             {projects.map((project) => (
               <div
                 key={project._id}
-                className="bg-white/5 border border-white/10 backdrop-blur-md
+                className="bg-transparent border border-white/10 backdrop-blur-md
                 p-8 rounded-2xl shadow-xl
                 hover:scale-[1.03] transition duration-300
                 flex flex-col justify-between"
@@ -80,6 +97,27 @@ export default function Projects() {
                   </div>
                 </div>
 
+                {/* Team Members */}
+                {project.teamMembers?.length > 0 && (
+                  <div className="mt-6">
+                    <p className="text-gray-500 text-xs uppercase tracking-wider">
+                      Team Members
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {project.teamMembers.map((member, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 text-xs rounded-full
+          bg-indigo-500/20 text-indigo-300"
+                        >
+                          {member}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Progress + Footer */}
                 <div className="mt-8">
                   <div className="flex justify-between text-xs text-gray-400 mb-2">
@@ -94,46 +132,74 @@ export default function Projects() {
                     />
                   </div>
 
-                  <div className="mt-6 flex justify-between items-center text-sm">
-                    <div className="flex flex-col text-sm">
-                      <span className="text-gray-400">
-                        By {project.createdBy?.name || "Unknown"}
-                      </span>
-
+                  <div className="mt-6 flex justify-between items-center flex-wrap gap-4">
+                    {/* LEFT SIDE — LinkedIn then GitHub */}
+                    <div className="flex gap-4 flex-wrap">
+                      {/* Creator LinkedIn FIRST */}
                       {project.createdBy?.linkedin && (
                         <a
                           href={project.createdBy.linkedin}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-indigo-400 hover:underline text-xs"
+                          className="flex items-center gap-2 bg-gray-200 h-11 px-4 rounded-md border shadow-sm hover:scale-105 transition"
                         >
-                          Connect on LinkedIn
+                          <img
+                            src={linkedinIcon}
+                            alt="linkedin"
+                            className="h-6 w-6"
+                          />
+                          <p className="text-black text-sm font-medium">
+                            LinkedIn
+                          </p>
                         </a>
                       )}
-                    </div>
 
-                    <div className="flex gap-4">
+                      {/* Project GitHub SECOND */}
                       {project.githubLink && (
                         <a
                           href={project.githubLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-indigo-400 hover:underline"
+                          className="flex items-center gap-2 bg-gray-200 h-11 px-4 rounded-md border shadow-sm hover:scale-105 transition"
                         >
-                          GitHub
-                        </a>
-                      )}
-                      {project.liveLink && (
-                        <a
-                          href={project.liveLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-green-400 hover:underline"
-                        >
-                          Live
+                          <img
+                            src={githubIcon}
+                            alt="github"
+                            className="h-6 w-6"
+                          />
+                          <p className="text-black text-sm font-medium">
+                            GitHub
+                          </p>
                         </a>
                       )}
                     </div>
+
+                    {/* RIGHT SIDE — Live Button */}
+                    {project.liveLink && (
+                      <a
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none">
+                          <span
+                            className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] 
+        bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]"
+                          />
+                          <span
+                            className="inline-flex h-full w-full items-center justify-center 
+        rounded-full bg-gray-950 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl"
+                          >
+                            Check Live Site
+                            <img
+                              src={arrowIcon}
+                              alt="github"
+                              className=" ml-3   h-4 w-4"
+                            />
+                          </span>
+                        </button>
+                      </a>
+                    )}
                   </div>
 
                   {/* Edit Button */}
