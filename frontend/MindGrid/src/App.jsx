@@ -8,8 +8,9 @@ import Signup from "./sections/Signup";
 import Login from "./sections/Login";
 import Profile from "./sections/Profile";
 import EditProfile from "./sections/EditProfile";
-import "react-toastify/ReactToastify.css";
 import Contributions from "./sections/Contributions";
+import "react-toastify/ReactToastify.css";
+
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
   try {
@@ -22,7 +23,25 @@ const parseJwt = (token) => {
   }
 };
 
-/** Component for /profile route to redirect to /profile/:id */
+/** Protected Route Wrapper */
+const ProtectedRoute = ({ children }) => {
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token") ||
+        localStorage.getItem("jwtToken") ||
+        ""
+      : "";
+
+  const payload = parseJwt(token);
+
+  if (!payload) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+/** Redirect /profile → /profile/:id */
 const MyProfileRedirect = () => {
   const navigate = useNavigate();
 
@@ -44,107 +63,54 @@ const MyProfileRedirect = () => {
     }
   }, [navigate]);
 
-  return null; // nothing to render
+  return null;
 };
 
 const App = () => {
-  // --- Restore token once, and block redirect until done ---
-  const [user, setUser] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
-
-  // initial restore on mount
-  React.useEffect(() => {
-    try {
-      const stored =
-        typeof window !== "undefined"
-          ? localStorage.getItem("token") ||
-            localStorage.getItem("jwtToken") ||
-            ""
-          : "";
-
-      if (stored) {
-        const payload = parseJwt(stored);
-        setUser(payload || null);
-      } else {
-        setUser(null);
-      }
-    } catch (err) {
-      console.warn("Auth restore failed:", err);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // listen for auth changes from same window (custom event) or other windows (storage event)
-  React.useEffect(() => {
-    const handler = () => {
-      try {
-        const stored =
-          typeof window !== "undefined"
-            ? localStorage.getItem("token") ||
-              localStorage.getItem("jwtToken") ||
-              ""
-            : "";
-
-        if (stored) {
-          setUser(parseJwt(stored) || null);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.warn("Auth update failed:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    window.addEventListener("auth-change", handler);
-    window.addEventListener("storage", handler);
-
-    return () => {
-      window.removeEventListener("auth-change", handler);
-      window.removeEventListener("storage", handler);
-    };
-  }, []);
-
-  /** Root redirect: wait until loading is done */
-  const RootRedirect = () => {
-    if (loading)
-      return <div style={{ padding: 20, color: "white" }}>Loading...</div>;
-    return user ? (
-      <Navigate to="/hero" replace />
-    ) : (
-      <Navigate to="/login" replace />
-    );
-  };
-
   return (
-    <main>
+    <main className="min-h-screen text-white">
       <Navbar />
 
       <Routes>
-        
-        <Route path="/" element={<RootRedirect />} />
-
+        {/* Public Routes */}
+        <Route path="/" element={<Hero />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
-        <Route path="/hero" element={<Hero />} />
-
-        <Route path="/contributions" element={<Contributions />} />
-
         <Route path="/explore" element={<Explore />} />
         <Route path="/clubmembers" element={<Clubmembers />} />
 
-        {/* profile routes */}
+        {/* Protected Routes */}
+        <Route
+          path="/contributions"
+          element={
+            <ProtectedRoute>
+              <Contributions />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/profile" element={<MyProfileRedirect />} />
-        <Route path="/profile/:id" element={<Profile />} />
 
-        <Route path="/editprofile" element={<EditProfile />} />
-        
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/editprofile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>
   );
