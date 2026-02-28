@@ -11,6 +11,7 @@ import EditProfile from "./sections/EditProfile";
 import Contributions from "./sections/Contributions";
 import "react-toastify/ReactToastify.css";
 import Footer from "./sections/Footer";
+import EditProject from "./sections/EditProject";
 
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
@@ -109,6 +110,24 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/create-project"
+  element={
+    <ProtectedRoute>
+      <EditProject />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/edit-project/:projectId"
+  element={
+    <ProtectedRoute>
+      <EditProject />
+    </ProtectedRoute>
+  }
+/>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -23,7 +23,14 @@ const UserSchema = new mongoose.Schema({
   totalContribution: {
   type: Number,
   default: 0
-}
+},
+
+projects: [
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'projects'
+  }
+]
 
 
 

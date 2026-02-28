@@ -291,7 +291,7 @@ const Hero = () => {
       ))}
     </div>
 
-    <div className="text-center mt-12">
+    <div className="text-center mt-12 mb-16">
       <Link
         to="/projects"
         className="text-indigo-400 hover:underline text-lg"

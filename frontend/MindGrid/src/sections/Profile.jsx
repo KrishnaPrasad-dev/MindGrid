@@ -188,6 +188,7 @@ try {
     }
     try {
       window.open(resumeHref, '_blank', 'noopener,noreferrer')
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
       window.location.href = resumeHref
     }
@@ -198,19 +199,35 @@ try {
       <div className="absolute inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
 
       <div className="relative w-[90%] bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90 rounded-2xl shadow-2xl z-10 p-1">
-        <div className="flex justify-end mt-1 mr-1 mb-2">
-          {canEdit ? (
-            <Link to="/editprofile" className="relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50">
-              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-2 text-sm font-medium text-gray-50 backdrop-blur-3xl">
-                <span className="text-white mr-2">Edit Profile</span>
-                <img src={pen} className="h-5 w-5" alt="edit" />
-              </span>
-            </Link>
-          ) : (
-            <div className="h-12" />
-          )}
-        </div>
+<div className="flex justify-end mt-1 mr-1 mb-2 gap-3">
+
+  {canEdit && (
+    <Link
+      to="/editprofile"
+      className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
+    >
+      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+      <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
+        <span className="text-white mr-2">Edit Profile</span>
+        <img src={pen} className="h-5 w-5" alt="edit" />
+      </span>
+    </Link>
+  )}
+
+  {canEdit && (
+    <Link
+      to="/create-project"
+      className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
+    >
+      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+      <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
+        <span className="text-white mr-2">Create Project</span>
+        <img src={pen} className="h-5 w-5" alt="edit" />
+      </span>
+    </Link>
+  )}
+
+</div>
 
         <div className="rounded-2xl bg-gradient-to-b p-8 md:p-12 flex flex-col md:flex-row gap-8">
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">

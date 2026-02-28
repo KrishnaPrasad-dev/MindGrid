@@ -14,6 +14,7 @@ connectToMongoose().catch(console.error);              // ✅ FIX
 const AuthRouter = require('./Routes/AuthRouter');
 const MembersRouter = require('./Routes/MembersRouter');
 const ProfileRouter = require('./Routes/ProfileRouter');
+const ProjectRouter = require("./Routes/ProjectRouter");
 
 const PORT = process.env.PORT || 8080;
 
@@ -57,6 +58,7 @@ app.use('/auth', AuthRouter);
 app.use('/members', MembersRouter);
 app.use('/api', ProfileRouter);
 app.use("/api/contributions", contributionRoutes);
+app.use("/api", ProjectRouter);
 
 
 module.exports = app;
