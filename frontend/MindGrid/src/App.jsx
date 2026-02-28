@@ -10,6 +10,7 @@ import Profile from "./sections/Profile";
 import EditProfile from "./sections/EditProfile";
 import Contributions from "./sections/Contributions";
 import "react-toastify/ReactToastify.css";
+import Footer from "./sections/Footer";
 
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
@@ -112,6 +113,7 @@ const App = () => {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Footer />
     </main>
   );
 };
