@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
 import arrowIcon from "../assets/arrow-up.png";
+
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
@@ -45,7 +46,7 @@ export default function Projects() {
         bg-gradient-to-r from-[#b2a8fd] via-[#8678f9] to-[#c7d2fe]
         bg-[200%_auto] bg-clip-text text-transparent animate-text-gradient"
         >
-          Projects
+          PROJECTS
         </h1>
 
         <motion.p

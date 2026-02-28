@@ -41,13 +41,13 @@ const CardSpotlight = ({ children }) => {
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className='relative flex items-center justify-center overflow-hidden rounded-xl border border-gray-800 bg-gradient-to-r from-black to-gray-950  sm:px-8 py-2   sm:py-2 shadow-2xl w-[85%] max-w-md '
+      className='relative flex items-center justify-center overflow-hidden rounded-xl border border-gray-800 bg-black sm:px-8 py-2   sm:py-2 shadow-2xl w-[85%] max-w-md '
     >
       <div
         className='pointer-events-none absolute -inset-px opacity-0 transition duration-300'
         style={{
           opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,182,255,.10), transparent 30%)`,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, bg-black)`,
         }}
       />
       <div className="relative z-10 w-full">
