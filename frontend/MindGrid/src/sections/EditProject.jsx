@@ -77,55 +77,57 @@ export default function EditProject() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const payload = {
-        ...form,
-        techStack: form.techStack
-          ? form.techStack.split(",").map((s) => s.trim()).filter(Boolean)
-          : [],
-        progress: Number(form.progress),
-      };
+    const payload = {
+      ...form,
+      techStack: form.techStack
+        ? form.techStack.split(",").map((s) => s.trim()).filter(Boolean)
+        : [],
+      progress: Number(form.progress),
+    };
 
-      const url = isEditMode
-        ? `${API_BASE}/api/projects/${projectId}`
-        : `${API_BASE}/api/projects`;
+    const url = isEditMode
+      ? `${API_BASE}/api/projects/${projectId}`
+      : `${API_BASE}/api/projects`;
 
-      const method = isEditMode ? "PUT" : "POST";
+    const method = isEditMode ? "PUT" : "POST";
 
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify(payload),
-      });
+    const res = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(payload),
+    });
 
-      if (!res.ok) {
-        throw new Error("Save failed");
-      }
-
-      toast.success(
-        isEditMode
-          ? "Project updated successfully!"
-          : "Project created successfully!"
-      );
-
-      setTimeout(() => {
-        navigate(-1);
-      }, 800);
-
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong.");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Backend error:", errorData);
+      throw new Error(errorData.message || "Save failed");
     }
-  };
+
+    toast.success(
+      isEditMode
+        ? "Project updated successfully!"
+        : "Project created successfully!"
+    );
+
+    setTimeout(() => {
+      navigate(-1);
+    }, 800);
+
+  } catch (err) {
+    console.error("Submit error:", err.message);
+    toast.error(err.message || "Something went wrong.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
   <section className="relative min-h-screen w-full flex items-center justify-center py-12 overflow-hidden">

@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Project = require("../Models/Project");
 const { connectToMongoose } = require("../Models/db");
+const requireAuth = require("../Middlewares/RequireAuth");
 
-router.post("/projects", async (req, res) => {
+router.post("/projects", requireAuth, async (req, res) => {
   try {
     await connectToMongoose();
 
-    const userId = req.user?.id; // coming from auth middleware
+    const userId = req.user._id;
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
