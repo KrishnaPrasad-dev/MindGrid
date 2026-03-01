@@ -34,7 +34,7 @@ const Contributions = () => {
         if (payload.email === TREASURER_EMAIL) {
           setIsTreasurer(true);
         }
-      // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
       } catch (err) {
         console.error("Invalid token");
       }
@@ -64,54 +64,54 @@ const Contributions = () => {
 
   return (
     <div style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
-      
+
       {/* Background */}
-      <div style={{ position: "absolute", inset: 0, zIndex: -1 }}>
+      <div style={{ position: "fixed", inset: 0, zIndex: -10 }}>
         <LightPillar
-          topColor="#5227FF"
-          bottomColor="#FF9FFC"
-          intensity={1}
-          rotationSpeed={0.3}
-          glowAmount={0.002}
-          pillarWidth={3}
-          pillarHeight={0.4}
-          noiseIntensity={0.5}
-          pillarRotation={25}
-          interactive={false}
-          mixBlendMode="screen"
-          quality="medium"
-        />
+        topColor="#5227FF"
+        bottomColor="#FF9FFC"
+        intensity={1}
+        rotationSpeed={0.3}
+        glowAmount={0.002}
+        pillarWidth={3}
+        pillarHeight={0.4}
+        noiseIntensity={0.5}
+        pillarRotation={25}
+        interactive={false}
+        mixBlendMode="screen"
+        quality="medium"
+      />
       </div>
 
-     {/* Floating Add Button */}
-{isTreasurer && (
-  <div
-    style={{
-      position: "fixed",
-      top: window.innerWidth > 768 ? "90px" : "auto",
-      bottom: window.innerWidth <= 768 ? "20px" : "auto",
-      right: "20px",
-      zIndex: 6,
-    }}
-  >
-    <button
-      onClick={() => setShowModal(true)}
-      style={{
-        padding: window.innerWidth > 768 ? "12px 20px" : "10px 16px",
-        borderRadius: "50px",
-        border: "none",
-        cursor: "pointer",
-        background: "#5227FF",
-        color: "white",
-        fontWeight: "600",
-        fontSize: "clamp(0.75rem, 2vw, 1rem)",
-        boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
-      }}
-    >
-      + Add Contribution
-    </button>
-  </div>
-)}
+      {/* Floating Add Button */}
+      {isTreasurer && (
+        <div
+          style={{
+            position: "fixed",
+            top: window.innerWidth > 768 ? "90px" : "auto",
+            bottom: window.innerWidth <= 768 ? "20px" : "auto",
+            right: "20px",
+            zIndex: 6,
+          }}
+        >
+          <button
+            onClick={() => setShowModal(true)}
+            style={{
+              padding: window.innerWidth > 768 ? "12px 20px" : "10px 16px",
+              borderRadius: "50px",
+              border: "none",
+              cursor: "pointer",
+              background: "#5227FF",
+              color: "white",
+              fontWeight: "600",
+              fontSize: "clamp(0.75rem, 2vw, 1rem)",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+            }}
+          >
+            + Add Contribution
+          </button>
+        </div>
+      )}
 
 
       {/* Main Leaderboard Container */}
