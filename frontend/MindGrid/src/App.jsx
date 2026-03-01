@@ -31,8 +31,8 @@ const ProtectedRoute = ({ children }) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("token") ||
-        localStorage.getItem("jwtToken") ||
-        ""
+      localStorage.getItem("jwtToken") ||
+      ""
       : "";
 
   const payload = parseJwt(token);
@@ -52,8 +52,8 @@ const MyProfileRedirect = () => {
     const token =
       typeof window !== "undefined"
         ? localStorage.getItem("token") ||
-          localStorage.getItem("jwtToken") ||
-          ""
+        localStorage.getItem("jwtToken") ||
+        ""
         : "";
 
     const payload = parseJwt(token);
@@ -81,15 +81,13 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/clubmembers" element={<Clubmembers />} />
+        <Route path="/contributions" element={<Contributions />} />
+
 
         {/* Protected Routes */}
         <Route
-          path="/contributions"
-          element={
-            <ProtectedRoute>
-              <Contributions />
-            </ProtectedRoute>
-          }
+          path="/profile/:id"
+          element={<Profile />}
         />
 
         <Route path="/profile" element={<MyProfileRedirect />} />
@@ -113,25 +111,25 @@ const App = () => {
         />
 
         <Route
-  path="/create-project"
-  element={
-    <ProtectedRoute>
-      <EditProject />
-    </ProtectedRoute>
-  }
-/>
+          path="/create-project"
+          element={
+            <ProtectedRoute>
+              <EditProject />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/edit-project/:projectId"
-  element={
-    <ProtectedRoute>
-      <EditProject />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/edit-project/:projectId"
+          element={
+            <ProtectedRoute>
+              <EditProject />
+            </ProtectedRoute>
+          }
+        />
 
 
-<Route path="/projects" element={<Projects />} />
+        <Route path="/projects" element={<Projects />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -88,4 +88,31 @@ router.put("/projects/:id", requireAuth, async (req, res) => {
   }
 });
 
+// TOGGLE FEATURED (ADMIN ONLY)
+router.put("/projects/:id/feature", requireAuth, async (req, res) => {
+  try {
+    await connectToMongoose();
+
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // 🔐 Make sure requireAuth attaches full user object
+    if (!req.user || req.user.email !== process.env.ADMIN_EMAIL) {
+      return res.status(403).json({ message: "Only admin can feature projects" });
+    }
+
+    project.isFeatured = !project.isFeatured;
+    await project.save();
+
+    res.json(project);
+
+  } catch (err) {
+    console.error("Feature toggle error:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;

@@ -48,11 +48,7 @@ const Clubmembers = () => {
           localStorage.getItem("jwtToken") ||
           sessionStorage.getItem("token");
 
-        if (!token) {
-          setError("You must be logged in to view members.");
-          setLoading(false);
-          return;
-        }
+        
 
         const res = await axios.get(`${API_URL}/members`, {
           headers: {

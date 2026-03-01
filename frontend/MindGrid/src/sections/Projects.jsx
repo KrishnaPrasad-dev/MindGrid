@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
 import arrowIcon from "../assets/arrow-up.png";
+import featuredIcon from "../assets/featured.png";
+import nonfeaturedIcon from "../assets/nonfeatured.png";
 
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
@@ -31,12 +33,33 @@ export default function Projects() {
     fetchProjects();
   }, []);
 
+  const token = localStorage.getItem("token");
+  const userEmail = localStorage.getItem("email");
+
+  const toggleFeature = async (id) => {
+    try {
+      await fetch(`${API_BASE}/api/projects/${id}/feature`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const res = await fetch(`${API_BASE}/api/projects`);
+      const data = await res.json();
+      setProjects(data);
+    } catch (err) {
+      console.error("Feature toggle error:", err);
+    }
+  };
+
   return (
     <section className="w-full flex flex-col relative overflow-hidden bg-black min-h-screen">
       {/* SAME HERO BACKGROUND */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_2px,transparent_2px),linear-gradient(to_bottom,#80808005_2px,transparent_2px)] bg-[size:14px_24px]" />
-        <div className="absolute left-1/2 top-[-10%] h-[1000px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#ffffff15,#000000)]" />
+        <div className="absolute left-1/2 top-[-10%] h-[1000px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#ffffff10,#000000)]" />
       </div>
 
       <div className="relative z-10 w-[90%] max-w-6xl mx-auto mt-32 mb-20">
@@ -76,9 +99,43 @@ export default function Projects() {
                 flex flex-col justify-between"
               >
                 <div>
-                  <h2 className="text-2xl font-semibold text-pink-400">
-                    {project.title}
-                  </h2>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h2 className="text-2xl font-semibold text-pink-400">
+                      {project.title}
+                    </h2>
+
+                    {/* Featured Badge */}
+                    {project.isFeatured && (
+                      <>
+                        <BadgeShine>Featured</BadgeShine>
+                        <img
+                          src={featuredIcon}
+                          alt="featured"
+                          className="h-6 w-6"
+                        />
+                      </>
+                    )}
+
+                    {/* Optional second image */}
+                    {project.isNonfeatured && (
+                      <img
+                        src={nonfeaturedIcon}
+                        alt="special"
+                        className="h-6 w-6"
+                      />
+                    )}
+                  </div>
+
+                  {userEmail === import.meta.env.VITE_ADMIN_EMAIL && (
+                    <button
+                      onClick={() => toggleFeature(project._id)}
+                      className="text-xs text-yellow-400 hover:text-yellow-300 mt-2"
+                    >
+                      {project.isFeatured
+                        ? "Unfeature Project"
+                        : "Mark as Featured"}
+                    </button>
+                  )}
 
                   <p className="text-gray-400 mt-4 text-sm leading-relaxed">
                     {project.description}
