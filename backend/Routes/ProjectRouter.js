@@ -29,7 +29,7 @@ router.get("/projects", async (req, res) => {
     await connectToMongoose();
 
     const projects = await Project.find()
-      .populate("createdBy", "name linkedin")
+      .populate("createdBy", "name linkedin email")
       .sort({ createdAt: -1 });
 
     res.json(projects);

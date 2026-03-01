@@ -6,7 +6,7 @@ import menuuu from "../assets/menuham.png";
 import { navLinks } from "../constants/index.js";
 import { useNavigate, Link } from "react-router-dom";
 
-const NavItems = ({ onClick = () => {} }) => (
+const NavItems = ({ onClick = () => { } }) => (
   <ul className="nav-ul font-bold">
     {navLinks.map((item) => (
       <li key={item.id} className="nav-li">
@@ -32,7 +32,15 @@ const parseJwt = (token) => {
   }
 };
 
+const getToken = () =>
+  localStorage.getItem("token") ||
+  localStorage.getItem("jwtToken") ||
+  "";
+
+
+
 const Navbar = () => {
+  // eslint-disable-next-line no-unused-vars
   const [loggedInUser, setLoggedInUser] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +57,8 @@ const Navbar = () => {
     navigate("/login", { replace: true });
   };
 
+
+
   const openMyProfile = () => {
     const token =
       localStorage.getItem("token") ||
@@ -63,6 +73,10 @@ const Navbar = () => {
       navigate("/login", { replace: true });
     }
   };
+
+  const token = getToken();
+  const payload = parseJwt(token);
+  const isLoggedIn = !!payload;
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -121,14 +135,25 @@ const Navbar = () => {
             </button>
 
             {/* Logout (kept unchanged) */}
-            <button
-              onClick={handleLogout}
-              className="relative inline-flex items-center justify-center px-5 ml-8 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
-            >
-              <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
-              <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
-              <span className="relative">Logout</span>
-            </button>
+            {isLoggedIn ? (
+  <button
+    onClick={handleLogout}
+    className="relative inline-flex items-center justify-center px-5 ml-8 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+  >
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="relative">Logout</span>
+  </button>
+) : (
+  <Link
+    to="/login"
+    className="relative inline-flex items-center justify-center px-5 ml-8 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+  >
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="relative">Login</span>
+  </Link>
+)}
           </nav>
         </div>
       </div>
@@ -167,17 +192,29 @@ const Navbar = () => {
           </div>
 
           <div className="flex ml-4 mt-6">
-            <button
-              onClick={() => {
-                closeMenu();
-                handleLogout();
-              }}
-              className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
-            >
-              <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
-              <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
-              <span className="relative">Logout</span>
-            </button>
+            {isLoggedIn ? (
+  <button
+    onClick={() => {
+      closeMenu();
+      handleLogout();
+    }}
+    className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+  >
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="relative">Logout</span>
+  </button>
+) : (
+  <Link
+    to="/login"
+    onClick={closeMenu}
+    className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-bold text-white rounded-md shadow-2xl group"
+  >
+    <span className="absolute inset-0 w-full h-full transition duration-300 ease-out opacity-0 bg-gradient-to-br from-pink-600 via-purple-700 to-blue-400 group-hover:opacity-100"></span>
+    <span className="absolute inset-0 w-full h-full border border-white rounded-md opacity-10"></span>
+    <span className="relative">Login</span>
+  </Link>
+)}
           </div>
         </nav>
       </div>

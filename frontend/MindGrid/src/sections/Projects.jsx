@@ -36,18 +36,20 @@ export default function Projects() {
 
   const token = localStorage.getItem("token");
 
-const parseJwt = (token) => {
-  try {
-    if (!token) return null;
-    const payload = token.split(".")[1];
-    return JSON.parse(atob(payload));
-  } catch {
-    return null;
-  }
-};
+  const parseJwt = (token) => {
+    try {
+      if (!token) return null;
+      const payload = token.split(".")[1];
+      return JSON.parse(atob(payload));
+    } catch {
+      return null;
+    }
+  };
 
-const payload = parseJwt(token);
-const userEmail = payload?.email;
+
+
+  const payload = parseJwt(token);
+  const userEmail = payload?.email;
 
   const toggleFeature = async (id) => {
     try {
@@ -113,40 +115,40 @@ const userEmail = payload?.email;
               >
                 <div>
                   <div className="flex items-start justify-between flex-wrap gap-2">
-  
-  {/* LEFT SIDE — Title */}
-  <h2 className="text-2xl font-semibold text-pink-400">
-    {project.title}
-  </h2>
 
-  {/* RIGHT SIDE — Featured Area */}
-  <div className="flex flex-col items-end">
-    
-    {project.isFeatured && (
-      <div className="flex items-center gap-2">
-        <h2 className="text-white text-xl font-medium">
-          Featured
-        </h2>
-        <img
-          src={featuredIcon}
-          alt="featured"
-          className="h-6 w-6"
-        />
-      </div>
-    )}
+                    {/* LEFT SIDE — Title */}
+                    <h2 className="text-2xl font-semibold text-pink-400">
+                      {project.title}
+                    </h2>
 
-    {project.isNonfeatured && (
-      <img
-        src={nonfeaturedIcon}
-        alt="special"
-        className="h-6 w-6 mt-1"
-      />
-    )}
+                    {/* RIGHT SIDE — Featured Area */}
+                    <div className="flex flex-col items-end">
 
-  </div>
+                      {project.isFeatured && (
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-white text-xl font-medium">
+                            Featured
+                          </h2>
+                          <img
+                            src={featuredIcon}
+                            alt="featured"
+                            className="h-6 w-6"
+                          />
+                        </div>
+                      )}
 
-</div>
-                  
+                      {project.isNonfeatured && (
+                        <img
+                          src={nonfeaturedIcon}
+                          alt="special"
+                          className="h-6 w-6 mt-1"
+                        />
+                      )}
+
+                    </div>
+
+                  </div>
+
 
                   {userEmail === import.meta.env.VITE_ADMIN_EMAIL && (
                     <button
@@ -176,6 +178,8 @@ const userEmail = payload?.email;
                     ))}
                   </div>
                 </div>
+
+
 
                 {/* Team Members */}
                 {project.teamMembers?.length > 0 && (
@@ -282,15 +286,18 @@ const userEmail = payload?.email;
                     )}
                   </div>
 
-                  {/* Edit Button */}
-                  <div className="mt-4 text-right">
-                    <Link
-                      to={`/edit-project/${project._id}`}
-                      className="text-xs text-gray-400 hover:text-white"
-                    >
-                      Edit →
-                    </Link>
-                  </div>
+                  {payload?.email &&
+                    project.createdBy?.email &&
+                    payload.email === project.createdBy.email && (
+                      <div className="mt-4 text-right">
+                        <Link
+                          to={`/edit-project/${project._id}`}
+                          className="text-xl border p-2 rounded-xl text-gray-400 hover:text-white"
+                        >
+                          Edit →
+                        </Link>
+                      </div>
+                    )}
                 </div>
               </div>
             ))}
