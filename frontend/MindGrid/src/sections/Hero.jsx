@@ -5,16 +5,25 @@ import brainImg from '../assets/brainrababu.gif';
 import arrowblk from '../assets/next.png';
 import { Link } from "react-router-dom";
 import GlowingCard from '../constants/GlowingCard.jsx';
+const API_BASE = import.meta.env.VITE_API_URL;
+
+
+import githubIcon from "../assets/github.png";
+import linkedinIcon from "../assets/linkedin.png";
+import arrowIcon from "../assets/arrow-up.png";
+import featuredIcon from "../assets/featured.png";
 
 const Hero = () => {
 
   const statsData = [
-    { label: "Members", value: 150 },
-    { label: "Events Conducted", value: 25 },
-    { label: "Projects Built", value: 40 },
+    { label: "Members", value: 60 },
+    { label: "Events Conducted", value: 3 },
+    { label: "Projects Built", value: 4 },
   ];
 
   const [counts, setCounts] = useState(statsData.map(() => 0));
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
 
   useEffect(() => {
     const duration = 1200;
@@ -39,6 +48,24 @@ const Hero = () => {
         });
       }, stepTime);
     });
+  }, []);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/projects`);
+        const data = await res.json();
+
+        const onlyFeatured = data.filter(p => p.isFeatured).slice(0, 3);
+        setFeaturedProjects(onlyFeatured);
+      } catch (err) {
+        console.error("Featured fetch error:", err);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchFeatured();
   }, []);
 
   return (
@@ -79,7 +106,7 @@ const Hero = () => {
 
       {/* Explore Button */}
       <div className="flex items-center justify-center bg-black mt-14 sm:mt-[-17%] sm:min-h-screen">
-        <Link 
+        <Link
           to='/explore'
           className="relative inline-flex items-center justify-center lg:px-6 lg:mt-12 lg:py-3 p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group"
         >
@@ -96,10 +123,10 @@ const Hero = () => {
       </div>
 
       <div className='flex relative items-center justify-center'>
-        <GlowingCard 
+        <GlowingCard
           className="relative"
-          title="MindGrid Club" 
-          description="These are our club members." 
+          title="MindGrid Club"
+          description="These are our club members."
         />
       </div>
 
@@ -109,13 +136,13 @@ const Hero = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto px-6"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto px-6"
         >
           {statsData.map((stat, index) => (
             <div
               key={index}
               className="bg-white/5 backdrop-blur-md border border-white/10 
-                         rounded-2xl p-8 text-center shadow-xl 
+                         rounded-2xl p-6 text-center shadow-xl 
                          hover:scale-105 transition duration-300"
             >
               <h2 className="text-4xl sm:text-5xl font-extrabold 
@@ -131,176 +158,256 @@ const Hero = () => {
         </motion.div>
       </div>
 
-     {/* Upcoming Events Preview */}
+      {/* Upcoming Events Preview */}
 <div className="relative z-10 w-full mt-16">
   <motion.div
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8 }}
     viewport={{ once: true }}
-    className="max-w-6xl mx-auto px-6"
+    className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
   >
-    <h2 className="text-3xl font-bold text-white mb-12 text-center">
-      Upcoming Events
-    </h2>
+          <h2 className="text-3xl font-bold text-white mb-12 text-center">
+            Upcoming Events
+          </h2>
 
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-      {[
-        {
-          title: "Hackathon 2026",
-          date: "March 12, 2026",
-          description:
-            "A 24-hour coding challenge focused on solving real-world problems using modern web technologies.",
-          speaker: "Guest Mentor: Ravi Kumar"
-        },
-        {
-          title: "Web Dev Bootcamp",
-          date: "April 2, 2026",
-          description:
-            "An intensive hands-on workshop covering React, APIs, and deployment strategies.",
-          speaker: "Lead: Krishna Prasad"
-        },
-        {
-          title: "AI Workshop",
-          date: "May 15, 2026",
-          description:
-            "Explore machine learning basics, model building, and real-world AI applications.",
-          speaker: "Speaker: Dr. Ananya Rao"
-        }
-      ].map((event, index) => (
-        <div
-          key={index}
-          className="bg-white/5 border border-white/10 backdrop-blur-md 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Hackathon 2025",
+                date: "october, 2025",
+                description:
+                  "A 24-hour coding challenge focused on solving real-world problems using modern web technologies.",
+                speaker: "Lead: Dr.Sanjeev Srivastava"
+
+              },
+
+              {
+                title: "Logical Programming.",
+                date: "Febuary 20, 2026",
+                description:
+                  "Detailed insights to logical thinking and programming logic.",
+                speaker: "Speaker: Dr. Salaria"
+              },
+              {
+                title: "Web Dev Challenge",
+                date: "Febuary 10, 2026",
+                description:
+                  "Mindgrid web development challenge focused on building a full stack web application for mindgrid club.",
+                speaker: "Lead: Dr.Sanjeev Srivastava"
+              },
+            ].map((event, index) => (
+              <div
+                key={index}
+                className="bg-white/5 border border-white/10 backdrop-blur-md 
                      p-6 rounded-2xl hover:scale-[1.03] transition 
                      flex flex-col justify-between"
-        >
-          <div>
-            <h3 className="text-xl font-semibold text-purple-400">
-              {event.title}
-            </h3>
+              >
+                <div>
+                  <h3 className="text-xl font-semibold text-purple-400">
+                    {event.title}
+                  </h3>
 
-            <p className="text-sm text-pink-400 mt-1">
-              {event.date}
-            </p>
+                  <p className="text-sm text-pink-400 mt-1">
+                    {event.date}
+                  </p>
 
-            <p className="text-gray-400 mt-4 text-sm leading-relaxed">
-              {event.description}
-            </p>
+                  <p className="text-gray-400 mt-4 text-sm leading-relaxed">
+                    {event.description}
+                  </p>
+                </div>
+
+                <div className="mt-6">
+                  <p className="text-gray-500 text-xs uppercase tracking-wider">
+                    Main Speaker
+                  </p>
+
+                  <p className="text-purple-300 text-sm mt-1">
+                    {event.speaker}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-6">
-            <p className="text-gray-500 text-xs uppercase tracking-wider">
-              Main Speaker
-            </p>
-
-            <p className="text-purple-300 text-sm mt-1">
-              {event.speaker}
-            </p>
+          <div className="text-center mt-12">
+            <Link
+              to="/events"
+              className="text-indigo-400 hover:underline text-lg"
+            >
+              View All Events →
+            </Link>
           </div>
-        </div>
-      ))}
-    </div>
-
-    <div className="text-center mt-12">
-      <Link
-        to="/events"
-        className="text-indigo-400 hover:underline text-lg"
-      >
-        View All Events →
-      </Link>
-    </div>
-  </motion.div>
-</div>
+        </motion.div>
+      </div>
 
 
-{/* Featured Projects Preview */}
+      {/* Featured Projects Preview */}
 <div className="relative z-10 w-full mt-20">
   <motion.div
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8 }}
     viewport={{ once: true }}
-    className="max-w-6xl mx-auto px-6"
+    className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
   >
-    <h2 className="text-3xl font-bold text-white mb-12 text-center">
-      Featured Projects
-    </h2>
+          <h2 className="text-3xl font-bold text-white mb-12 text-center">
+            Featured Projects
+          </h2>
 
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-      {[
-        {
-          name: "MindGrid Portal",
-          tech: "MERN Stack",
-          description:
-            "A centralized platform for managing club members, events, and contributions.",
-          members: ["Krishna", "Rahul", "Ananya"]
-        },
-        {
-          name: "Event Tracker",
-          tech: "Node + MongoDB",
-          description:
-            "Tracks attendance, registrations, and participation analytics for all events.",
-          members: ["Kiran", "Megha"]
-        },
-        {
-          name: "Leaderboard System",
-          tech: "React + Express",
-          description:
-            "Gamified ranking system based on contributions, projects, and event activity.",
-          members: ["Arjun", "Sneha", "Vishal"]
-        }
-      ].map((project, index) => (
-        <div
-          key={index}
-          className="bg-white/5 border border-white/10 backdrop-blur-md 
-                     p-6 rounded-2xl hover:scale-[1.03] transition 
-                     flex flex-col justify-between"
-        >
-          <div>
-            <h3 className="text-xl font-semibold text-pink-400">
-              {project.name}
-            </h3>
-
-            <p className="text-sm text-purple-300 mt-1">
-              {project.tech}
-            </p>
-
-            <p className="text-gray-400 mt-4 text-sm leading-relaxed">
-              {project.description}
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <p className="text-gray-500 text-xs uppercase tracking-wider">
-              Team Members
-            </p>
-
-            <div className="flex flex-wrap gap-2 mt-2">
-              {project.members.map((member, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 text-xs rounded-full 
-                             bg-purple-500/20 text-purple-300"
+          {loadingProjects ? (
+            <p className="text-center text-gray-400">Loading featured projects...</p>
+          ) : featuredProjects.length === 0 ? (
+            <p className="text-center text-gray-400">No featured projects yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProjects.map((project) => (
+                <div
+                  key={project._id}
+                  className="bg-transparent border border-white/10 backdrop-blur-md
+            p-6 rounded-2xl shadow-xl
+            hover:scale-[1.03] transition duration-300
+            flex flex-col justify-between"
                 >
-                  {member}
-                </span>
+                  <div>
+                    <div className="flex items-start justify-between flex-wrap gap-2">
+                      <h2 className="text-2xl font-semibold text-pink-400">
+                        {project.title}
+                      </h2>
+
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-white text-xl font-medium">
+                          Featured
+                        </h2>
+                        <img
+                          src={featuredIcon}
+                          alt="featured"
+                          className="h-6 w-6"
+                        />
+                      </div>
+                    </div>
+
+                    <p className="text-gray-400 mt-4 text-sm leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Tech Stack */}
+                    <div className="flex flex-wrap gap-2 mt-6">
+                      {project.techStack?.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-3 py-1 text-xs rounded-full
+                    bg-purple-500/20 text-purple-300"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Team Members */}
+                  {project.teamMembers?.length > 0 && (
+                    <div className="mt-6">
+                      <p className="text-gray-500 text-xs uppercase tracking-wider">
+                        Team Members
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {project.teamMembers.map((member, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 text-xs rounded-full
+                      bg-indigo-500/20 text-indigo-300"
+                          >
+                            {member}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Footer */}
+                  <div className="mt-8">
+                    <div className="flex justify-between text-xs text-gray-400 mb-2">
+                      <span>{project.status}</span>
+                      <span>{project.progress}%</span>
+                    </div>
+
+                    <div className="w-full bg-gray-800 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
+                        style={{ width: `${project.progress}%` }}
+                      />
+                    </div>
+
+                    <div className="mt-6 flex justify-between items-center flex-wrap gap-4">
+                      <div className="flex gap-4 flex-wrap">
+                        {project.createdBy?.linkedin && (
+                          <a
+                            href={project.createdBy.linkedin}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-2 bg-gray-200 h-11 px-4 rounded-md border shadow-sm hover:scale-105 transition"
+                          >
+                            <img src={linkedinIcon} alt="linkedin" className="h-6 w-6" />
+                            <p className="text-black text-sm font-medium">
+                              LinkedIn
+                            </p>
+                          </a>
+                        )}
+
+                        {project.githubLink && (
+                          <a
+                            href={project.githubLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-2 bg-gray-200 h-11 px-4 rounded-md border shadow-sm hover:scale-105 transition"
+                          >
+                            <img src={githubIcon} alt="github" className="h-6 w-6" />
+                            <p className="text-black text-sm font-medium">
+                              GitHub
+                            </p>
+                          </a>
+                        )}
+                      </div>
+
+                      {project.liveLink && (
+                        <a href={project.liveLink} target="_blank" rel="noreferrer">
+                          <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none">
+                            <span
+                              className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] 
+                        bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]"
+                            />
+                            <span
+                              className="inline-flex h-full w-full items-center justify-center 
+                        rounded-full bg-gray-950 px-8 py-1 text-sm font-medium text-gray-50 backdrop-blur-3xl"
+                            >
+                              Check Live Site
+                              <img
+                                src={arrowIcon}
+                                alt="arrow"
+                                className="ml-3 h-4 w-4"
+                              />
+                            </span>
+                          </button>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
-          </div>
-        </div>
-      ))}
-    </div>
+          )}
 
-    <div className="text-center mt-12 mb-16">
-      <Link
-        to="/projects"
-        className="text-indigo-400 hover:underline text-lg"
-      >
-        View All Projects →
-      </Link>
-    </div>
-  </motion.div>
-</div>
+          <div className="text-center mt-12 mb-16">
+            <Link
+              to="/projects"
+              className="text-indigo-400 hover:underline text-lg"
+            >
+              View All Projects →
+            </Link>
+          </div>
+        </motion.div>
+      </div>
 
     </section>
   );

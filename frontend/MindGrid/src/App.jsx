@@ -13,6 +13,7 @@ import "react-toastify/ReactToastify.css";
 import Footer from "./sections/Footer";
 import EditProject from "./sections/EditProject";
 import Projects from "./sections/Projects";
+import ScrollToTop from "../src/sections/ScrollToTop";
 
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
@@ -73,6 +74,7 @@ const App = () => {
   return (
     <main className="min-h-screen text-white">
       <Navbar />
+      <ScrollToTop />
 
       <Routes>
         {/* Public Routes */}
