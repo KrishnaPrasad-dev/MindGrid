@@ -6,6 +6,7 @@ import arrowIcon from "../assets/arrow-up.png";
 import featuredIcon from "../assets/featured.png";
 import nonfeaturedIcon from "../assets/nonfeatured.png";
 
+
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
@@ -34,7 +35,19 @@ export default function Projects() {
   }, []);
 
   const token = localStorage.getItem("token");
-  const userEmail = localStorage.getItem("email");
+
+const parseJwt = (token) => {
+  try {
+    if (!token) return null;
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+};
+
+const payload = parseJwt(token);
+const userEmail = payload?.email;
 
   const toggleFeature = async (id) => {
     try {
@@ -107,7 +120,8 @@ export default function Projects() {
                     {/* Featured Badge */}
                     {project.isFeatured && (
                       <>
-                        <BadgeShine>Featured</BadgeShine>
+                      <h2>Featured</h2>
+                         
                         <img
                           src={featuredIcon}
                           alt="featured"
@@ -129,10 +143,10 @@ export default function Projects() {
                   {userEmail === import.meta.env.VITE_ADMIN_EMAIL && (
                     <button
                       onClick={() => toggleFeature(project._id)}
-                      className="text-xs text-yellow-400 hover:text-yellow-300 mt-2"
+                      className="text-md mt-2 py-2 px-2 rounded-xl  border border-1px text-yellow-400 hover:text-yellow-300 mt-2"
                     >
                       {project.isFeatured
-                        ? "Unfeature Project"
+                        ? "UnFeature Project"
                         : "Mark as Featured"}
                     </button>
                   )}
