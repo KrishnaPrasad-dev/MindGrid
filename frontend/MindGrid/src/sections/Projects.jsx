@@ -112,33 +112,41 @@ const userEmail = payload?.email;
                 flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <h2 className="text-2xl font-semibold text-pink-400">
-                      {project.title}
-                    </h2>
+                  <div className="flex items-start justify-between flex-wrap gap-2">
+  
+  {/* LEFT SIDE — Title */}
+  <h2 className="text-2xl font-semibold text-pink-400">
+    {project.title}
+  </h2>
 
-                    {/* Featured Badge */}
-                    {project.isFeatured && (
-                      <>
-                      <h2>Featured</h2>
-                         
-                        <img
-                          src={featuredIcon}
-                          alt="featured"
-                          className="h-6 w-6"
-                        />
-                      </>
-                    )}
+  {/* RIGHT SIDE — Featured Area */}
+  <div className="flex flex-col items-end">
+    
+    {project.isFeatured && (
+      <div className="flex items-center gap-2">
+        <h2 className="text-white text-xl font-medium">
+          Featured
+        </h2>
+        <img
+          src={featuredIcon}
+          alt="featured"
+          className="h-6 w-6"
+        />
+      </div>
+    )}
 
-                    {/* Optional second image */}
-                    {project.isNonfeatured && (
-                      <img
-                        src={nonfeaturedIcon}
-                        alt="special"
-                        className="h-6 w-6"
-                      />
-                    )}
-                  </div>
+    {project.isNonfeatured && (
+      <img
+        src={nonfeaturedIcon}
+        alt="special"
+        className="h-6 w-6 mt-1"
+      />
+    )}
+
+  </div>
+
+</div>
+                  
 
                   {userEmail === import.meta.env.VITE_ADMIN_EMAIL && (
                     <button
