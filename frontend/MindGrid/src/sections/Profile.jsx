@@ -7,6 +7,7 @@ import mem from '../assets/group.png'
 import pen from '../assets/pen.png'
 import githubIcon from '../assets/github.png'
 import linkedinIcon from '../assets/linkedin.png'
+import LetterGlitch from '../constants/LetterGlitch' 
 
 /** Safely get API base (works in Vite & CRA) */
 const API_BASE = import.meta.env.VITE_API_URL
@@ -114,16 +115,16 @@ const Profile = (props) => {
           // continue to refresh from server in background
         }
 
-       let got = null
+        let got = null
 
-try {
-  const res = await axios.get(`${API_BASE}/api/profile/${id}`, axiosConfig)
-  got = res.data
-} catch (err) {
-  if (err.response?.status !== 404) {
-    throw err
-  }
-}
+        try {
+          const res = await axios.get(`${API_BASE}/api/profile/${id}`, axiosConfig)
+          got = res.data
+        } catch (err) {
+          if (err.response?.status !== 404) {
+            throw err
+          }
+        }
 
 
         if (got && !cancelled) {
@@ -142,8 +143,8 @@ try {
             linkedinurl: got.linkedinurl || got.linkedin || prev.linkedinurl,
           }))
         } else if (!got && !stateUser) {
-  throw new Error('User not found')
-}
+          throw new Error('User not found')
+        }
 
       } catch (err) {
         if (!cancelled) {
@@ -171,6 +172,8 @@ try {
 
   const loggedInUserId = getLoggedInUserId()
   const canEdit = loggedInUserId && id && String(loggedInUserId) === String(id)
+  const MY_USER_ID = "6991847d329bfc4bb0a5aa0e"
+  const isKrishnaProfile = String(id) === MY_USER_ID
 
   // Build final resume href:
   // Priority: resumeDirectLink (from server) -> resumeLink (raw) -> null
@@ -188,46 +191,71 @@ try {
     }
     try {
       window.open(resumeHref, '_blank', 'noopener,noreferrer')
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       window.location.href = resumeHref
     }
   }
 
   return (
-    <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1 overflow-hidden">
-      <div className="absolute inset-0 z-[-2] bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
+  <section className="relative min-h-screen w-full mt-12 flex items-center justify-center py-12 px-1 overflow-hidden">
 
-      <div className="relative w-[90%] bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90 rounded-2xl shadow-2xl z-10 p-1">
-<div className="flex justify-end mt-1 mr-1 mb-2 gap-3">
-
-  {canEdit && (
-    <Link
-      to="/editprofile"
-      className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
-    >
-      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-      <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
-        <span className="text-white mr-2">Edit Profile</span>
-        <img src={pen} className="h-5 w-5" alt="edit" />
-      </span>
-    </Link>
+  
+  <div className="fixed inset-0 -z-10">
+  {isKrishnaProfile ? (
+    <>
+      <LetterGlitch
+        glitchSpeed={50}
+        centerVignette={true}
+        outerVignette={false}
+        smooth={true}
+      />
+      <div className="absolute inset-0 bg-black/40" />
+    </>
+  ) : (
+    <div className="w-full h-full bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]" />
   )}
-
-  {canEdit && (
-    <Link
-      to="/create-project"
-      className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
-    >
-      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-      <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
-        <span className="text-white mr-2">Create Project</span>
-        <img src={pen} className="h-5 w-5" alt="edit" />
-      </span>
-    </Link>
-  )}
-
 </div>
+
+   <div
+  className={`relative w-[90%] rounded-2xl shadow-2xl z-10 p-1 ${
+    isKrishnaProfile
+      ? "bg-black backdrop-blur-sm border border-white/10"
+      : "bg-gradient-to-br from-gray-900/60 via-gray-950 to-black/90"
+  }`}
+>
+
+<div className="flex justify-end mt-1 mr-1 mb-2 gap-3">
+  
+        
+
+          {canEdit && (
+            <Link
+              to="/editprofile"
+              className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
+                <span className="text-white mr-2">Edit Profile</span>
+                <img src={pen} className="h-5 w-5" alt="edit" />
+              </span>
+            </Link>
+          )}
+
+          {canEdit && (
+            <Link
+              to="/create-project"
+              className="relative h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full items-center justify-center rounded-xl bg-gray-950 px-4 text-sm font-medium text-gray-50 backdrop-blur-3xl">
+                <span className="text-white mr-2">Create Project</span>
+                <img src={pen} className="h-5 w-5" alt="edit" />
+              </span>
+            </Link>
+          )}
+
+        </div>
 
         <div className="rounded-2xl bg-gradient-to-b p-8 md:p-12 flex flex-col md:flex-row gap-8">
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-1/3">
@@ -248,13 +276,20 @@ try {
               <>
                 <div className="flex flex-col mt-12 sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
+                    {isKrishnaProfile ? (
+                      <><h1 className='text-2xl md:text-4xl font-extrabold text-white'>
+                        Krishna Prasad - Admin</h1>
+                        </>
+                    ) :(
                     <h1 className="text-2xl md:text-4xl font-extrabold text-white">{user.name}</h1>
+                    )
+                  }
                     <p className="mt-3 text-indigo-300 font-medium text-lg md:text-xl">{user.title}</p>
 
                     <div className="flex items-center mt-4 gap-3">
                       <button
                         onClick={handleResumeClick}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${resumeHref ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 cursor-not-allowed' } transition text-sm shadow-md`}
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${resumeHref ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-gray-700 text-gray-300 cursor-not-allowed'} transition text-sm shadow-md`}
                         aria-disabled={!resumeHref}
                       >
                         <svg
@@ -315,7 +350,7 @@ try {
                     </a>
                   </div>
 
-                  
+
                 </div>
               </>
             )}
@@ -324,6 +359,7 @@ try {
 
         <div className="mt-4 text-center text-xs text-gray-400 pb-2">-------{user.name}-------</div>
       </div>
+     
     </section>
   )
 }
