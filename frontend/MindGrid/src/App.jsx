@@ -14,6 +14,9 @@ import Footer from "./sections/Footer";
 import EditProject from "./sections/EditProject";
 import Projects from "./sections/Projects";
 import ScrollToTop from "../src/sections/ScrollToTop";
+import Events from "./sections/Events";
+import CreateEvent from "./sections/CreateEvent";
+
 
 /** small helper: parse JWT payload without extra libs */
 const parseJwt = (token) => {
@@ -130,8 +133,19 @@ const App = () => {
           }
         />
 
+      <Route
+  path="/edit-event/:eventId"
+  element={
+    <ProtectedRoute>
+      <CreateEvent />
+    </ProtectedRoute>
+  }
+/>
+
 
         <Route path="/projects" element={<Projects />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/create-event" element={<CreateEvent />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

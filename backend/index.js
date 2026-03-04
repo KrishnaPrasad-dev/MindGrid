@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 const path = require('path');
+
 const contributionRoutes = require("./Routes/Contribution");
+const EventRouter = require("./Routes/EventRouter");
 
-
-const { connectToMongoose } = require('./Models/db'); // ✅ FIX
-connectToMongoose().catch(console.error);              // ✅ FIX
+const { connectToMongoose } = require('./Models/db');
+connectToMongoose().catch(console.error);
 
 const AuthRouter = require('./Routes/AuthRouter');
 const MembersRouter = require('./Routes/MembersRouter');
@@ -17,6 +18,7 @@ const ProfileRouter = require('./Routes/ProfileRouter');
 const ProjectRouter = require("./Routes/ProjectRouter");
 
 const PORT = process.env.PORT || 8080;
+
 
 // CORS
 const allowedOrigins = [
@@ -40,8 +42,11 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
+
+// Test routes
 app.get('/', (req, res) => {
   res.send('MindGrid backend is running ✅');
 });
@@ -55,16 +60,19 @@ app.get('/health', (req, res) => {
 });
 
 
-
+// Routers
 app.use('/auth', AuthRouter);
 app.use('/members', MembersRouter);
 app.use('/api', ProfileRouter);
 app.use("/api/contributions", contributionRoutes);
 app.use("/api", ProjectRouter);
+app.use("/api", EventRouter);   // ✅ EVENTS ROUTES ADDED
 
 
 module.exports = app;
 
+
+// Start server
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);

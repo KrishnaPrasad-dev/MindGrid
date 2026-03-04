@@ -24,6 +24,8 @@ const Hero = () => {
   const [counts, setCounts] = useState(statsData.map(() => 0));
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [featuredEvents, setFeaturedEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
   useEffect(() => {
     const duration = 1200;
@@ -67,6 +69,25 @@ const Hero = () => {
 
     fetchFeatured();
   }, []);
+
+  useEffect(() => {
+  const fetchFeaturedEvents = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events`);
+      const data = await res.json();
+
+      const onlyFeatured = data.filter(e => e.isFeatured).slice(0, 3);
+      setFeaturedEvents(onlyFeatured);
+
+    } catch (err) {
+      console.error("Featured events fetch error:", err);
+    } finally {
+      setLoadingEvents(false);
+    }
+  };
+
+  fetchFeaturedEvents();
+}, []);
 
   return (
     <section className="w-full flex flex-col relative overflow-hidden bg-black" id="home">
@@ -159,77 +180,60 @@ const Hero = () => {
       </div>
 
       {/* Upcoming Events Preview */}
-<div className="relative z-10 w-full mt-16">
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    viewport={{ once: true }}
-    className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
-  >
+      <div className="relative z-10 w-full mt-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
+        >
           <h2 className="text-3xl font-bold text-white mb-12 text-center">
             Upcoming Events
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Hackathon 2025",
-                date: "october, 2025",
-                description:
-                  "A 24-hour coding challenge focused on solving real-world problems using modern web technologies.",
-                speaker: "Lead: Dr.Sanjeev Srivastava"
+         {loadingEvents ? (
+  <p className="text-center text-gray-400">Loading events...</p>
+) : featuredEvents.length === 0 ? (
+  <p className="text-center text-gray-400">No featured events yet.</p>
+) : (
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    {featuredEvents.map((event) => (
+      <div
+        key={event._id}
+        className="bg-white/5 border border-white/10 backdrop-blur-md 
+        p-6 rounded-2xl hover:scale-[1.03] transition 
+        flex flex-col justify-between"
+      >
+        <div>
+          <h3 className="text-xl font-semibold text-purple-400">
+            {event.title}
+          </h3>
 
-              },
+          <p className="text-sm text-pink-400 mt-1">
+            {event.date}
+          </p>
 
-              {
-                title: "Logical Programming.",
-                date: "Febuary 20, 2026",
-                description:
-                  "Detailed insights to logical thinking and programming logic.",
-                speaker: "Speaker: Dr. Salaria"
-              },
-              {
-                title: "Web Dev Challenge",
-                date: "Febuary 10, 2026",
-                description:
-                  "Mindgrid web development challenge focused on building a full stack web application for mindgrid club.",
-                speaker: "Lead: Dr.Sanjeev Srivastava"
-              },
-            ].map((event, index) => (
-              <div
-                key={index}
-                className="bg-white/5 border border-white/10 backdrop-blur-md 
-                     p-6 rounded-2xl hover:scale-[1.03] transition 
-                     flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-xl font-semibold text-purple-400">
-                    {event.title}
-                  </h3>
+          <p className="text-gray-400 mt-4 text-sm leading-relaxed">
+            {event.description}
+          </p>
+        </div>
 
-                  <p className="text-sm text-pink-400 mt-1">
-                    {event.date}
-                  </p>
+        {event.speaker && (
+          <div className="mt-6">
+            <p className="text-gray-500 text-xs uppercase tracking-wider">
+              Main Speaker
+            </p>
 
-                  <p className="text-gray-400 mt-4 text-sm leading-relaxed">
-                    {event.description}
-                  </p>
-                </div>
-
-                <div className="mt-6">
-                  <p className="text-gray-500 text-xs uppercase tracking-wider">
-                    Main Speaker
-                  </p>
-
-                  <p className="text-purple-300 text-sm mt-1">
-                    {event.speaker}
-                  </p>
-                </div>
-              </div>
-            ))}
+            <p className="text-purple-300 text-sm mt-1">
+              {event.speaker}
+            </p>
           </div>
-
+        )}
+      </div>
+    ))}
+  </div>
+)}
           <div className="text-center mt-12">
             <Link
               to="/events"
@@ -243,14 +247,14 @@ const Hero = () => {
 
 
       {/* Featured Projects Preview */}
-<div className="relative z-10 w-full mt-20">
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    viewport={{ once: true }}
-    className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
-  >
+      <div className="relative z-10 w-full mt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="max-w-7xl xl:max-w-[1400px] mx-auto px-8"
+        >
           <h2 className="text-3xl font-bold text-white mb-12 text-center">
             Featured Projects
           </h2>
