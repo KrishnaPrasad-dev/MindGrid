@@ -3,9 +3,7 @@ const router = express.Router();
 const Event = require("../Models/Events");
 const authMiddleware = require("../middlewares/auth");
 
-// ===============================
-// Create event
-// ===============================
+
 router.post("/events", authMiddleware, async (req, res) => {
   try {
 
@@ -24,9 +22,6 @@ router.post("/events", authMiddleware, async (req, res) => {
   }
 });
 
-// ===============================
-// Get all events
-// ===============================
 router.get("/events", async (req, res) => {
   try {
 
@@ -42,9 +37,6 @@ router.get("/events", async (req, res) => {
   }
 });
 
-// ===============================
-// Get single event
-// ===============================
 router.get("/events/:id", async (req, res) => {
   try {
 
@@ -62,9 +54,7 @@ router.get("/events/:id", async (req, res) => {
   }
 });
 
-// ===============================
-// Toggle featured
-// ===============================
+
 router.put("/events/:id/feature", authMiddleware, async (req, res) => {
   try {
 
@@ -85,9 +75,8 @@ router.put("/events/:id/feature", authMiddleware, async (req, res) => {
   }
 });
 
-// ===============================
-// Update event
-// ===============================
+
+
 router.put("/events/:id", authMiddleware, async (req, res) => {
   try {
 
