@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Event = require("../Models/Events");
-const authMiddleware = require("../middlewares/auth");
-
+const authMiddleware = require('../Middlewares/auth');
 
 router.post("/events", authMiddleware, async (req, res) => {
   try {
