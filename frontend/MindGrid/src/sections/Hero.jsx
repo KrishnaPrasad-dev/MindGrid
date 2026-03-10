@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import brainImg from '../assets/brainrababu.gif';
 import arrowblk from '../assets/next.png';
 import { Link } from "react-router-dom";
+import InstallAppButton from "../constants/InstallAppButton.jsx";
 import GlowingCard from '../constants/GlowingCard.jsx';
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -143,7 +144,7 @@ const Hero = () => {
         </Link>
       </div>
 
-      <div className='flex relative items-center justify-center'>
+      <div className='flex relative items-center md:mb-[-80px] justify-center'>
         <GlowingCard
           className="relative"
           title="MindGrid Club"
@@ -151,7 +152,9 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative z-10 w-full mt-12  mb-24">
+      <InstallAppButton />
+
+      <div className="relative z-10 w-full mt-12 md:mt-24  mb-24">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
