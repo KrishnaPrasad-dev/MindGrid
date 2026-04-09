@@ -1,127 +1,137 @@
-# MindGrid 🧠
+# MindGrid
 
-A full-stack web application built for managing club memberships, member profiles, and tracking contributions — all in one place.
+MindGrid is a full-stack club management platform that centralizes member onboarding, profile management, contributions tracking, projects showcase, and event management.
 
----
+## Live Demo
 
-## 🚀 Live Demo
+https://mindgrid-gnu.vercel.app
 
-[mindgrid-gnu.vercel.app](https://mindgrid-gnu.vercel.app)
+## Core Features
 
----
+- Secure authentication with JWT-based login and protected routes
+- Controlled signup flow using an allowed-members list
+- Member directory for viewing registered club members
+- Personal profile page with editable user information
+- Contributions module to track and display member activity
+- Projects module with create, list, view, edit, and feature-toggle workflows
+- Events module with create, list, view, edit, and feature-toggle workflows
+- Responsive frontend with reusable UI sections and smooth interactions
 
-## ✨ Features
+## Tech Stack
 
-- 🔐 **Secure Authentication** — JWT-based login and registration with protected routes
-- 👤 **Member Profiles** — Each member gets a personal profile with their details
-- ✏️ **Edit Profile** — Members can update their own profile information anytime
-- 📋 **Membership Management** — Track and manage club members efficiently
-- 🏆 **Contributions Page** — Dedicated page listing each member's contributions to the club
+### Frontend
 
----
-
-## 🛠️ Tech Stack
-
-**Frontend:**
-- React.js (with Vite)
-- React Router DOM
+- React 19 with Vite
+- React Router
 - Axios
+- Tailwind CSS
+- Framer Motion
 
-**Backend:**
+### Backend
+
 - Node.js
-- Express.js
+- Express
+- MongoDB with Mongoose
+- JWT authentication
+- bcrypt password hashing
+- Joi request validation
 
-**Database:**
-- MongoDB (with Mongoose)
+## Project Structure
 
-**Auth:**
-- JWT (JSON Web Tokens)
-- bcrypt for password hashing
-
----
-
-## 📁 Project Structure
-
-```
+```text
 mindgrid/
-├── frontend/
-    |── MindGrid/          # React frontend (Vite)
-│     ├── src/
-│     │   ├── components/
-│     │   ├── pages/
-│     │   └── main.jsx
-├── backend/          # Express backend
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   └── index.js
-└── README.md
+|-- backend/
+|   |-- config/
+|   |-- Controllers/
+|   |-- Middlewares/
+|   |-- Models/
+|   |-- Routes/
+|   |-- uploads/
+|   |-- index.js
+|   `-- package.json
+|-- frontend/
+|   `-- MindGrid/
+|       |-- public/
+|       |-- src/
+|       |   |-- config/
+|       |   |-- constants/
+|       |   `-- sections/
+|       |-- index.html
+|       `-- package.json
+|-- assets/
+`-- README.md
 ```
 
----
-
-## ⚙️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js >= 18
-- MongoDB (local or Atlas)
+- Node.js 20 or later
+- MongoDB Atlas URI or local MongoDB instance
 
-### Installation
+### 1) Clone and Install
 
 ```bash
-# Clone the repository
 git clone https://github.com/your-username/mindgrid.git
 cd mindgrid
 
-# Install backend dependencies
+# Backend
 cd backend
 npm install
 
-# Install frontend dependencies
+# Frontend
 cd ../frontend/MindGrid
 npm install
 ```
 
-### Environment Variables
+### 2) Configure Environment Variables
 
-Create a `.env` file in the `/backend` directory:
+Create a `.env` file in `backend/` with the following values:
 
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
+SALT_ROUNDS=10
+ADMIN_EMAIL=your_admin_email@example.com
+DISABLE_MEMBERSHIP_CHECK=false
 ```
 
-### Run the App
+### 3) Run the Application
 
 ```bash
-# Start the backend
+# Terminal 1: backend
 cd backend
 npm start
 
-# Start the frontend (in a new terminal)
+# Terminal 2: frontend
 cd frontend/MindGrid
 npm run dev
 ```
 
-App will be running at `http://localhost:5173`
+Frontend: http://localhost:5173  
+Backend health check: http://localhost:5000/health
 
----
+## API Surface (High Level)
 
-## 📸 Screenshots
+- Auth routes: signup, login, membership check
+- Members routes: list member information
+- Profile routes: get and update profile data
+- Contributions routes: create and fetch contributions
+- Projects routes: create, read, update, and feature project records
+- Events routes: create, read, update, and feature event records
 
-```markdown
-![Home Page](assets/Home.png)
-![Club Members Page](assets/Members.png)
-![Explore Page](assets/Explore.png)
-![contributions Page](assets/Contributions.png)
-![Profile Page](assets/Profile.png)
-```
+## Screenshots
 
----
+![Home](assets/Home.png)
+![Members](assets/Members.png)
+![Explore](assets/Explore.png)
+![Contributions](assets/Contribuions.png)
+![Profile](assets/Profile.png)
 
-## 🙋‍♂️ Author
+## Author
 
-**Krishna Prasad**  
-[Portfolio](https://krishnaprasad.space) • [GitHub](https://github.com/KrishnaPrasad-dev) • [LinkedIn](https://www.linkedin.com/in/krishnaprasad-webdev)
+Krishna Prasad  
+Portfolio: https://krishnaprasad.space  
+GitHub: https://github.com/KrishnaPrasad-dev  
+LinkedIn: https://www.linkedin.com/in/krishnaprasad-webdev
